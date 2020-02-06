@@ -4,7 +4,7 @@
   "description": "server code for lmsfiu-fb",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon server.js",
+    "dev": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Nicolas Arevalo, James Watson III, Alejandro Arrieta",
