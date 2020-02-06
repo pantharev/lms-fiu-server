@@ -93,9 +93,9 @@ app.use(function (err, req, res, next) {
     }
   });
 
-/*http.listen(port, () => {
+http.listen(port, () => {
     console.log("http Server is running on port: " + port);
-})*/
-httpsServer.listen(port, () => {
-    console.log("https Server is running on port: " + port);
 })
+/*httpsServer.listen(port, () => {
+    console.log("https Server is running on port: " + port);
+})*/
