@@ -56,12 +56,13 @@ const profileRoutes = require('./app/routes/profile-routes');
 app.use('/auth', authRoutes);
 app.use('/profile', profileRoutes);
 
-/*app.all(() => {
-res.header('Access-Control-Allow-Origin', 'http://localhost:3000'); // your website
+app.all(() => {
+res.header('Access-Control-Allow-Origin', 'lms-fiu.netlify.com'); // your website
 res.header('Access-Control-Allow-Credentials', 'true');
 res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
 res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With')
-})*/
+})
+
 app.get("/", (req, res) => {
     res.json({ message: "Hello world!"});
 });
