@@ -18,7 +18,7 @@ const credentials = {key: privateKey, cert: certificate};
 const httpsServer = https.createServer(credentials, app);
 const io = require('socket.io')(httpsServer);
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 const allowUrl = ['courses', 'modules'];
 
