@@ -67,6 +67,10 @@ app.get("/", (req, res) => {
     res.json({ message: "Hello world!"});
 });
 
+app.get("/test", (req, res) => {
+    res.json({ test: "Hello test!"});
+})
+
 const sql = require("./app/models/db");
 
 io.on('connection', function(socket) {
