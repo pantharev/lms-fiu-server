@@ -11,10 +11,10 @@ const http = require('http').createServer(app);
 const https = require('https');
 
 const fs = require('fs');
-const privateKey  = fs.readFileSync('ssl/server.key', 'utf8');
+const privateKey = fs.readFileSync('ssl/server.key', 'utf8');
 const certificate = fs.readFileSync('ssl/server.crt', 'utf8');
 
-const credentials = {key: privateKey, cert: certificate};
+const credentials = { key: privateKey, cert: certificate };
 const httpsServer = https.createServer(credentials, app);
 const io = require('socket.io')(httpsServer);
 
@@ -24,7 +24,7 @@ const allowUrl = ['courses', 'modules'];
 
 app.use(bodyParser.json());
 
-app.use(bodyParser.urlencoded({ extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
 // Auth 
@@ -57,28 +57,29 @@ app.use('/auth', authRoutes);
 app.use('/profile', profileRoutes);
 
 app.all(() => {
-res.header('Access-Control-Allow-Origin', '*'); // your website
-res.header('Access-Control-Allow-Credentials', 'true');
-res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With')
-})
+    res.header('Access-Control-Allow-Origin', '*'); // your website
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With')
+});
+
 
 app.get("/", (req, res) => {
-    res.json({ message: "Hello world!"});
+    res.json({ message: "Hello world!" });
 });
 
 app.get("/test", (req, res) => {
-    res.json({ test: "Hello test!"});
+    res.json({ test: "Hello test!" });
 })
 
 const sql = require("./app/models/db");
 
-io.on('connection', function(socket) {
+io.on('connection', function (socket) {
     console.log('a user connected');
     socket.on('search', (data) => {
         console.log(data);
         sql.query(`SELECT * FROM courses WHERE name LIKE '${data}%'`, (err, res) => {
-            if(err)
+            if (err)
                 return
             io.emit('search-data', res);
         });
@@ -93,14 +94,15 @@ require("./app/routes/module.routes.js")(app);
 // [SH] Catch unauthorised errors
 app.use(function (err, req, res, next) {
     if (err.name === 'UnauthorizedError') {
-      res.status(401);
-      res.json({"message" : err.name + ": " + err.message});
+        res.status(401);
+        res.json({ "message": err.name + ": " + err.message });
     }
-  });
-
+});
+/*
 http.listen(port, () => {
     console.log("http Server is running on port: " + port);
 })
-/*httpsServer.listen(port, () => {
+*/
+httpsServer.listen(port, () => {
     console.log("https Server is running on port: " + port);
-})*/
+})

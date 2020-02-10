@@ -7,6 +7,7 @@ var clientURL = "https://localhost:4200";
 // auth login
 router.get('/login', (req, res, next) => {
     console.log("Does it work?");
+    /*
     passport.authenticate('facebook', (err, user, info) => {
         console.log("does auth fb work?");
         try {
@@ -28,7 +29,8 @@ router.get('/login', (req, res, next) => {
             return next(error);
         }
     })(req, res, next);
-    //res.send('login');
+    */
+    res.send('login');
     //console.log("HELLO LOGIN");
 });
 
@@ -53,14 +55,16 @@ router.get('/facebook/redirect', passport.authenticate('facebook'), (req, res) =
 
     console.log("User email: " + req.user[0].email);
     const body = { _id: req.user[0].user_id, email: req.user[0].email };
-    const token = jwt.sign({ _id: req.user[0].user_id,
-    email: req.user[0].email,
-     exp: parseInt(expiry.getTime() / 1000)}, 'MY_SECRET');
+    const token = jwt.sign({
+        _id: req.user[0].user_id,
+        email: req.user[0].email,
+        exp: parseInt(expiry.getTime() / 1000)
+    }, 'MY_SECRET');
 
     console.log("Login with JWT: " + token);
     console.log("Body: " + JSON.stringify(body));
 
-    res.json({token});
+    res.json({ token });
     //res.redirect('/profile/');
     //console.log("Req user: " + JSON.stringify(req.user));
     //res.cookie('user', req.user[0]);
