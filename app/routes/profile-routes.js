@@ -18,19 +18,15 @@ const authCheck = (req, res, next) => {
     }
 };
 
-router.get('/', auth, (req, res) => {
+router.get('/', (req, res) => {
 
-    if(!req.payload._id) {
-        res.status(401).json({"message" : "UnauthorizedError: private profile"});
-    } else {
-        console.log(req.payload._id);
-    }
+    
     //console.log("Req user: " + JSON.stringify(req.user));
     //res.send(req.user[0]);
     //console.log("Session is: " + JSON.stringify(req.session));
     //res.send(req.user);
     //res.send(req.user);
-    res.send('you are logged in, this is your profile - ');
+    return res.send('you are logged in, this is your profile - ');
 });
 
 router.get('/details', (req, res) => {
