@@ -54,7 +54,7 @@ const profileRoutes = require('./app/routes/profile-routes');
 
 //app.use(authenticationMiddleware);
 app.use('/auth', authRoutes);
-app.use('/profile', profileRoutes);
+app.use('/profile', passport.authenticate('jwt', {session: false}), profileRoutes);
 
 app.all(() => {
 res.header('Access-Control-Allow-Origin', '*'); // your website
@@ -64,7 +64,7 @@ res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content
 })
 
 app.get("/", (req, res) => {
-    res.json({ message: "Hello world!"});
+    res.send('Hello World');
 });
 
 app.get("/test", (req, res) => {

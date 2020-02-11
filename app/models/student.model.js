@@ -7,6 +7,7 @@ const Student = function(student) {
     this.l_name = student.l_name;
     this.active = student.active;
     this.user_id = student.user_id;
+    this.password = student.password;
 };
 
 Student.create = (newStudent, result) => {
@@ -30,6 +31,17 @@ Student.findById = (studentId, result) => {
                 return reject(err);
             }
             result(null, res[0]);
+            return resolve(res[0]);
+        });
+    });
+};
+
+Student.findById2 = (studentId) => {
+    return new Promise((resolve, reject) => {
+        sql.query("SELECT * FROM students WHERE id = ?", [studentId], (err, res) => {
+            if(err) {
+                return reject(err);
+            }
             return resolve(res[0]);
         });
     });
