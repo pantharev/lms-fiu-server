@@ -16,7 +16,7 @@ const certificate = fs.readFileSync('ssl/server.crt', 'utf8');
 
 const credentials = {key: privateKey, cert: certificate};
 const httpsServer = https.createServer(credentials, app);
-const io = require('socket.io')(httpsServer);
+const io = require('socket.io')(http);
 
 const port = process.env.PORT || 3000;
 
@@ -25,6 +25,12 @@ const allowUrl = ['courses', 'modules'];
 app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({ extended: true}));
+/*const corsOptions = {
+    origin: '*',
+    methods: ["POST", "GET"],
+    credentials: true,
+    maxAge: 3600
+};*/
 app.use(cors());
 
 // Auth 
@@ -54,14 +60,14 @@ const profileRoutes = require('./app/routes/profile-routes');
 
 //app.use(authenticationMiddleware);
 app.use('/auth', authRoutes);
-app.use('/profile', passport.authenticate('jwt', {session: false}), profileRoutes);
+app.use('/profile', profileRoutes);
 
-app.all(() => {
+/*app.all(() => {
 res.header('Access-Control-Allow-Origin', '*'); // your website
-res.header('Access-Control-Allow-Credentials', 'true');
+//res.header('Access-Control-Allow-Credentials', 'false');
 res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With')
-})
+res.header('Access-Control-Allow-Headers', 'accept, Content-Type, Authorization, Content-Length, X-Requested-With')
+})*/
 
 app.get("/", (req, res) => {
     res.send('Hello World');
