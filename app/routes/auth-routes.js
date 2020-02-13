@@ -46,12 +46,17 @@ router.post('/signup', passport.authenticate('local-signup', {session: false}), 
 
 router.post('/login', passport.authenticate('local-login', {session: false}), (req, res, next) => {
     const { email, password } = req.body;
-    console.log("email: " + email + " password: " + password);
+    //console.log("email: " + email + " password: " + password);
     let response;
     if( email && password ) {
         Student.findByEmail(email).then((value) => {
             if(value[0].password === password) {
-                let payload = { id: value[0].id };
+                //console.log("Value: " + JSON.stringify(value[0]));
+                let payload = { id: value[0].id,
+                                email: value[0].email,
+                                f_name: value[0].f_name,
+                                l_name: value[0].l_name };
+
                 let token = jwt.sign(payload, jwtOptions.secretOrKey);
                 response = res.json({ msg: 'ok', token: token });
             } else {
