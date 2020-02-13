@@ -34,11 +34,23 @@ Module.create = (courseId, newModule, result) => {
             }).then(() => {
                 connection.commit();
                 connection.release();
-            })
-        })
+            });
+        });
     });
 }
 
+Module.findById = (moduleId, result) => {
+    return new Promise((resolve, reject) => {
+        sql.query("SELECT * FROM modules WHERE id = ?", moduleId, (err, res) => {
+            if(err) { 
+                result(err, null);
+                return reject(err);
+            }
+            result(null, res);
+            return resolve(res);
+        })
+    })
+}
 // Display modules in course
 Module.findByCourseId = (courseId, result) => {
     return new Promise((resolve, reject) => {
@@ -69,13 +81,22 @@ Module.updateById = (id, moduleO, result) => {
 
 Module.delete = (id, result) => {
     return new Promise((resolve, reject) => {
-        sql.query("DELETE FROM modules WHERE id = ?", id, (err, res) => {
-            if(err) {
-                result(err, null);
-                return reject(err);
-            }
-            result(null, res);
-            return resolve(res);
+        sql.getConnection((err, connection) => {
+            new Promise((resolve, reject) => {
+                connection.beginTransaction();
+                connection.query("DELETE FROM courses_modules WHERE module_id = ?", id, (err, res) => {
+                    if(err) return reject(err);
+                    return resolve(res);
+                })
+            }).then((value) => {
+                connection.query("DELETE FROM modules WHERE id = ?", id, (err, res) => {
+                    if(err) return reject(err);
+                    return resolve(res);
+                })
+            }).then(() => {
+                connection.commit();
+                connection.release();
+            });
         });
     });
 };

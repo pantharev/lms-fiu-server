@@ -3,7 +3,9 @@ module.exports = app => {
 
     app.post("/modules/:courseId", moduleC.create);
     
-    app.get("/modules/:courseId", moduleC.findOneCourse);
+    app.get("/modules/m/:moduleId", moduleC.findOne);
+
+    app.get("/modules/c/:courseId", moduleC.findOneCourse);
 
     app.put("/modules/:moduleId", moduleC.update);
 

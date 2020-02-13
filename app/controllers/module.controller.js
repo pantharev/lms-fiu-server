@@ -23,6 +23,33 @@ exports.create = (req, res) => {
     })
 }
 
+// Find a single Module with a moduleId
+exports.findOne = (req, res) => {
+
+    const className = "Module";
+    const reqParamId = req.params.moduleId;
+
+    Module.findById(reqParamId, (err, data) => {
+        if(err) {
+            if(err.kind == "not_found"){
+                res.status(404).send({
+                    message: `Not found ${className} with id ${reqParamId}.`
+                });
+            } else {
+                res.status(500).send({
+                    message: `Error retrieving ${className} with id ${reqParamId}`
+                });
+            }
+        } else {
+            res.send(data);
+        }
+    }).then(() => {
+        console.log(`${className} findById(${reqParamId}) was found`);
+    }).catch((err) => {
+        console.log(`Error findById(${reqParamId}), couldn't find/retrieve course\n${err}`);
+    })
+};
+
 // Find all modules in a course
 exports.findOneCourse = (req, res) => {
     Module.findByCourseId(req.params.courseId, (err, data) => {
