@@ -58,7 +58,11 @@ router.post('/login', passport.authenticate('local-login', {session: false}), (r
                                 l_name: value[0].l_name };
 
                 let token = jwt.sign(payload, jwtOptions.secretOrKey);
-                response = res.json({ msg: 'ok', token: token });
+                response = res.json({ id: payload.id,
+                                      email: payload.email,
+                                      f_name: payload.f_name,
+                                      l_name: payload.l_name,
+                                      token: token });
             } else {
                 response = res.status(401).json({ msg: 'Password is incorrect'});
             }
