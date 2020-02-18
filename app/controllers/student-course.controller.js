@@ -12,16 +12,21 @@ exports.create = (req, res) => {
     // Create a StudentCourse
     const studentCourse = new StudentCourse({
         student_id: req.body.student_id,
-        course_id: req.body.course_id
+        course_id: req.body.course_id,
+        enrollment_status: req.body.enrollment_status
     });
 
     // Save StudentCourse in the database
-    StudentCourse.create(studentCourse, (err, data) => {
+    StudentCourse.create(new StudentCourse(req.body), (err, data) => {
         if(err)
             res.status(500).send({
                 message: err.message || "Some error occured while creating the StudentCourse."
             });
         else res.send(data);
+    }).then((value) => {
+        console.log("Created new student: " + value);
+    }).catch((reason) => {
+        console.log("Couldn't create new student: " + reason);
     });
 };
 

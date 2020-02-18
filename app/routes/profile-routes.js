@@ -1,3 +1,4 @@
+const fs = require('fs');
 const router = require('express').Router();
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
@@ -62,7 +63,18 @@ router.get('/', checkToken, (req, res) => {
 });
 
 router.get('/details', (req, res) => {
-    res.send('details');
+    let folders = fs.readdirSync('./test');
+    let objArray = [];
+
+    folders.forEach((folder) => {
+        let obj = {};
+        let files = fs.readdirSync('./test' + folder);
+        obj.folder = folder;
+        obj.files = files;
+        objArray.push(obj);
+    })
+
+    res.json({ data: JSON.stringify(objArray) });
 })
 
 module.exports = router;
