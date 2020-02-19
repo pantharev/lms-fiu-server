@@ -108,7 +108,9 @@ app.use(function (err, req, res, next) {
 /*
 app.post
 */
-
+app.post('/*', function(request, response) {
+    response.redirect('/');
+  });
 
 http.listen(port, () => {
     console.log("http Server is running on port: " + port);
