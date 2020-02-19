@@ -112,9 +112,6 @@ app.post('/', function (req, res) {
     res.send("Post request sent to backend");
 });
 
-app.post('/homepage', function (req, res) {
-    res.send("Post request sent to backend homepage");
-});
 
 http.listen(port, () => {
     console.log("http Server is running on port: " + port);
