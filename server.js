@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -73,8 +74,38 @@ app.get("/", (req, res) => {
     res.send('Hello World');
 });
 
-app.get("/test", (req, res) => {
-    res.json({ test: "Hello test!"});
+function readPdfFile(file) {
+    const bitmap = fs.readFileSync(file);
+    const buf = new Buffer.from(bitmap);
+    return buf;
+}
+
+const inputfile = './assets/file.pdf';
+const outputfile = './assets/outfile.pdf';
+
+const data = readPdfFile(inputfile);
+
+app.post("/testpdf", (req, res) => {
+    sql.query("INSERT INTO pdfs(pdf, module_id) VALUES(?, ?)", [data, 1], (err, res) => {
+        if(err) throw err;
+        console.log("BLOB data inserted!");
+    })
+    /*let file = fs.readFileSync('./assets/file.pdf');
+    res.contentType("application/pdf");
+    res.send(file);*/
+    //res.json({ test: "Hello test!"});
+})
+
+app.get("/testpdf", (req, res) => {
+    sql.query("SELECT * FROM pdfs", (err, res) => {
+        if(err) throw err;
+        const row = res[res.length-1];
+        const data = row.pdf;
+        console.log("BLOB data read! " + data);
+        const buf = new Buffer.from(data, "binary");
+        fs.writeFileSync(outputfile, buf);
+        console.log("New file output: " + outputfile);
+    })
 })
 
 const sql = require("./app/models/db");
