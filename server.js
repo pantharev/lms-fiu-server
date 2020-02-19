@@ -105,11 +105,11 @@ app.use(function (err, req, res, next) {
     }
 });
 
-/*
-app.post
-*/
-app.post('/*', function (request, response) {
-    response.redirect('/');
+/* Facebook tab request handling */
+
+
+app.post('/', function (req, res) {
+    res.send("Post request sent to homepage");
 });
 
 http.listen(port, () => {
