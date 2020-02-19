@@ -70,7 +70,7 @@ res.header('Access-Control-Allow-Headers', 'accept, Content-Type, Authorization,
 })*/
 
 app.get("/", (req, res) => {
-    res.send('Hello World3');
+    res.send('Hello World4');
 });
 
 app.get("/test", (req, res) => {
@@ -108,9 +108,9 @@ app.use(function (err, req, res, next) {
 /*
 app.post
 */
-app.post('/*', function(request, response) {
+app.post('/*', function (request, response) {
     response.redirect('/');
-  });
+});
 
 http.listen(port, () => {
     console.log("http Server is running on port: " + port);
