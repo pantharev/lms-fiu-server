@@ -109,6 +109,10 @@ app.use(function (err, req, res, next) {
 
 
 app.post('/', function (req, res) {
+    res.send("Post request sent to backend");
+});
+
+app.post('/homepage', function (req, res) {
     res.send("Post request sent to backend homepage");
 });
 
