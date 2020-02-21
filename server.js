@@ -95,7 +95,6 @@ require("./app/routes/student.routes.js")(app);
 require("./app/routes/course.routes.js")(app);
 require("./app/routes/student-course.routes.js")(app);
 require("./app/routes/module.routes.js")(app);
-require("./app/routes/leaderboard.routes.js")(app);
 require("./app/routes/video.routes.js")(app);
 
 // [SH] Catch unauthorised errors
@@ -118,7 +117,8 @@ app.post('/', function (req, res) {
 http.listen(port, () => {
     console.log("http Server is running on port: " + port);
 });
-
+/*
 httpsServer.listen(port, () => {
     console.log("https Server is running on port: " + port);
 })
+*/

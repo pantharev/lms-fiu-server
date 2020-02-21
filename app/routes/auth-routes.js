@@ -11,8 +11,10 @@ let jwtOptions = {};
 jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 jwtOptions.secretOrKey = 'wowwow';
 
+
 // auth facebook login
-/*router.get('/login', (req, res, next) => {
+/*
+router.get('/login', (req, res, next) => {
     console.log("Does it work?");
     /*
     passport.authenticate('facebook', (err, user, info) => {
@@ -36,10 +38,10 @@ jwtOptions.secretOrKey = 'wowwow';
             return next(error);
         }
     })(req, res, next);
-    */
     res.send('login');
     //console.log("HELLO LOGIN");
-});*/
+});
+*/
 
 // local auth
 router.post('/signup', passport.authenticate('local-signup', {session: false}), (req, res, next) => {
