@@ -90,6 +90,7 @@ require("./app/routes/student.routes.js")(app);
 require("./app/routes/course.routes.js")(app);
 require("./app/routes/student-course.routes.js")(app);
 require("./app/routes/module.routes.js")(app);
+require("./app/routes/leaderboard.routes.js")(app);
 
 // [SH] Catch unauthorised errors
 app.use(function (err, req, res, next) {
