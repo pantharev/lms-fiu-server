@@ -16,7 +16,7 @@ const certificate = fs.readFileSync('ssl/server.crt', 'utf8');
 
 const credentials = { key: privateKey, cert: certificate };
 const httpsServer = https.createServer(credentials, app);
-const io = require('socket.io')(httpsServer);
+const io = require('socket.io')(http);
 
 const port = process.env.PORT || 3000;
 
@@ -25,6 +25,12 @@ const allowUrl = ['courses', 'modules'];
 app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({ extended: true }));
+/*const corsOptions = {
+    origin: '*',
+    methods: ["POST", "GET"],
+    credentials: true,
+    maxAge: 3600
+};*/
 app.use(cors());
 
 // Auth 
@@ -56,16 +62,15 @@ const profileRoutes = require('./app/routes/profile-routes');
 app.use('/auth', authRoutes);
 app.use('/profile', profileRoutes);
 
-app.all(() => {
-    res.header('Access-Control-Allow-Origin', '*'); // your website
-    res.header('Access-Control-Allow-Credentials', 'true');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With')
-});
-
+/*app.all(() => {
+res.header('Access-Control-Allow-Origin', '*'); // your website
+//res.header('Access-Control-Allow-Credentials', 'false');
+res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+res.header('Access-Control-Allow-Headers', 'accept, Content-Type, Authorization, Content-Length, X-Requested-With')
+})*/
 
 app.get("/", (req, res) => {
-    res.json({ message: "Hello world!" });
+    res.send('Hello World4');
 });
 
 app.get("/test", (req, res) => {
@@ -91,6 +96,7 @@ require("./app/routes/course.routes.js")(app);
 require("./app/routes/student-course.routes.js")(app);
 require("./app/routes/module.routes.js")(app);
 require("./app/routes/leaderboard.routes.js")(app);
+require("./app/routes/video.routes.js")(app);
 
 // [SH] Catch unauthorised errors
 app.use(function (err, req, res, next) {
@@ -99,11 +105,20 @@ app.use(function (err, req, res, next) {
         res.json({ "message": err.name + ": " + err.message });
     }
 });
-/*
+
+
+/* Facebook tab request handling */
+
+
+app.post('/', function (req, res) {
+    res.send("Post request sent to backend");
+});
+
+
 http.listen(port, () => {
     console.log("http Server is running on port: " + port);
-})
-*/
+});
+
 httpsServer.listen(port, () => {
     console.log("https Server is running on port: " + port);
 })

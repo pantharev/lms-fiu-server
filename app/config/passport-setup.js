@@ -1,18 +1,21 @@
 const passport = require('passport');
 const FacebookStrategy = require('passport-facebook').Strategy;
+const LocalStrategy = require('passport-local').Strategy;
+const ExtractJwt = require('passport-jwt').ExtractJwt;
+const JwtStrategy = require('passport-jwt').Strategy;
 const keys = require('./keys');
 const Student = require("../models/student.model");
 const jwt = require('jsonwebtoken');
 
 passport.serializeUser((user, done) => {
   //console.log("Successfully serialized user");
-  //console.log("The user is: " + JSON.stringify(user));
-  //console.log("id: " + user[0].user_id);
-  done(null, user[0].user_id);
+  console.log("The user is: " + JSON.stringify(user));
+  console.log("id: " + user[0].id);
+  done(null, user[0].id);
 });
 
 passport.deserializeUser((id, done) => {
-  Student.findByUserId(id).then((student) => {
+  Student.findById2(id).then((student) => {
     //console.log("student deserialized: " + JSON.stringify(student));
     done(null, student);
   }).catch(() => {
@@ -40,7 +43,7 @@ function generateJwt(id, email, first_name, last_name) {
   }, keys.session.cookieKey)
 }
 
-passport.use(new FacebookStrategy({
+/*passport.use(new FacebookStrategy({
     clientID: keys.facebook.clientID,
     clientSecret: keys.facebook.clientSecret,
     callbackURL: keys.facebook.callbackURL,
@@ -94,4 +97,66 @@ passport.use(new FacebookStrategy({
         //console.log(profile._json.email); 
         //done();
     }
+));*/
+
+let jwtOptions = {};
+jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+jwtOptions.secretOrKey = 'wowwow';
+
+passport.use(new JwtStrategy(jwtOptions, function(jwt_payload, done) {
+  console.log('payload received', jwt_payload);
+  Student.findById2(jwt_payload.id).then((value) => {
+    return done(null, value);
+  }).catch(() => {
+    return done(null, false);
+  })
+}));
+
+passport.use('local-signup', new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password',
+    passReqToCallback: true
+},
+  function(req, email, password, done) {
+
+    const userData = {
+      email: email,
+      f_name: '',
+      l_name: '',
+      active: 1,
+      user_id: 0,
+      password: password
+    };
+
+    const student = new Student(userData);
+
+    Student.findByEmail(email).then(() => {
+      console.log("Email already taken");
+      return done(null, false);
+    }).catch(() => {
+      Student.create(student, (err, data) => {
+        if(err) return;
+        return done(null, data);
+      })
+    })
+  }
+));
+
+passport.use('local-login', new LocalStrategy({
+  usernameField: 'email',
+  passwordField: 'password',
+  passReqToCallback: true
+},
+  function(req, email, password, done) {
+    Student.findByEmail(email).then((value) => {
+      console.log(value[0].password);
+      if(value[0].password != password) {
+        console.log("Wrong password");
+        return done(null, false);
+      }
+      return done(null, value);
+    }).catch((reason) => {
+      return done(reason);
+    })
+  }
 ));
