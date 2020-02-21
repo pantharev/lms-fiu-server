@@ -5,7 +5,11 @@ const cors = require("cors");
 const passport = require('passport');
 const cookieSession = require('cookie-session');
 const cookieParser = require('cookie-parser');
+//const fileupload = require("express-fileupload");
 const keys = require('./app/config/keys');
+const multer = require('multer');
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 const app = express();
 const http = require('http').createServer(app);
@@ -42,6 +46,7 @@ app.use(cookieSession({
 }));
 
 app.use(cookieParser());
+//app.use(fileupload());
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -85,11 +90,17 @@ const outputfile = './assets/outfile.pdf';
 
 const data = readPdfFile(inputfile);
 
-app.post("/testpdf", (req, res) => {
-    sql.query("INSERT INTO pdfs(pdf, module_id) VALUES(?, ?)", [data, 1], (err, res) => {
+app.post("/testpdf", upload.any(), (req, res) => {
+    console.log("testpdf posted");
+    if(req.files){
+        const file = req.files;
+        console.log(file[0].buffer);
+        console.log("module_id: " + req.body.fileKey);
+    }
+    /*sql.query("INSERT INTO pdfs(pdf, module_id) VALUES(?, ?)", [data, 1], (err, res) => {
         if(err) throw err;
         console.log("BLOB data inserted!");
-    })
+    })*/
     /*let file = fs.readFileSync('./assets/file.pdf');
     res.contentType("application/pdf");
     res.send(file);*/
@@ -127,6 +138,7 @@ require("./app/routes/course.routes.js")(app);
 require("./app/routes/student-course.routes.js")(app);
 require("./app/routes/module.routes.js")(app);
 require("./app/routes/video.routes.js")(app);
+require("./app/routes/pdf.routes.js")(app, upload);
 
 // [SH] Catch unauthorised errors
 app.use(function (err, req, res, next) {
