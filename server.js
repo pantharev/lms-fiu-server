@@ -1,10 +1,15 @@
+require('dotenv').config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const passport = require('passport');
 const cookieSession = require('cookie-session');
 const cookieParser = require('cookie-parser');
+//const fileupload = require("express-fileupload");
 const keys = require('./app/config/keys');
+const multer = require('multer');
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 const app = express();
 const http = require('http').createServer(app);
@@ -41,6 +46,7 @@ app.use(cookieSession({
 }));
 
 app.use(cookieParser());
+//app.use(fileupload());
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -73,8 +79,45 @@ app.get("/", (req, res) => {
     res.send('Hello World4');
 });
 
-app.get("/test", (req, res) => {
-    res.json({ test: "Hello test!" });
+
+function readPdfFile(file) {
+    const bitmap = fs.readFileSync(file);
+    const buf = new Buffer.from(bitmap);
+    return buf;
+}
+
+const inputfile = './assets/file.pdf';
+const outputfile = './assets/outfile.pdf';
+
+const data = readPdfFile(inputfile);
+
+app.post("/testpdf", upload.any(), (req, res) => {
+    console.log("testpdf posted");
+    if(req.files){
+        const file = req.files;
+        console.log(file[0].buffer);
+        console.log("module_id: " + req.body.fileKey);
+    }
+    /*sql.query("INSERT INTO pdfs(pdf, module_id) VALUES(?, ?)", [data, 1], (err, res) => {
+        if(err) throw err;
+        console.log("BLOB data inserted!");
+    })*/
+    /*let file = fs.readFileSync('./assets/file.pdf');
+    res.contentType("application/pdf");
+    res.send(file);*/
+    //res.json({ test: "Hello test!"});
+})
+
+app.get("/testpdf", (req, res) => {
+    sql.query("SELECT * FROM pdfs", (err, res) => {
+        if(err) throw err;
+        const row = res[res.length-1];
+        const data = row.pdf;
+        console.log("BLOB data read! " + data);
+        const buf = new Buffer.from(data, "binary");
+        fs.writeFileSync(outputfile, buf);
+        console.log("New file output: " + outputfile);
+    })
 })
 
 const sql = require("./app/models/db");
@@ -96,6 +139,7 @@ require("./app/routes/course.routes.js")(app);
 require("./app/routes/student-course.routes.js")(app);
 require("./app/routes/module.routes.js")(app);
 require("./app/routes/video.routes.js")(app);
+require("./app/routes/pdf.routes.js")(app, upload);
 
 // [SH] Catch unauthorised errors
 app.use(function (err, req, res, next) {
