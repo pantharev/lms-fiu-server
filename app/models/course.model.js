@@ -51,7 +51,7 @@ Course.getAll = (req, result) => {
                 numPages = Math.ceil(numRows / numPerPage);
                 console.log('number of pages: ', numPages);
             });
-            connection.query("SELECT * FROM courses ORDER BY id ASC LIMIT ? , ?", [skip, numPerPage], (err, res) => {
+            connection.query("SELECT * FROM courses ORDER BY name ASC LIMIT ? , ?", [skip, numPerPage], (err, res) => {
                 if(err) {
                     result(err, null);
                     return reject(err);

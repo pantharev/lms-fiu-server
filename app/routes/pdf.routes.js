@@ -5,7 +5,7 @@ module.exports = (app, upload) => {
     
     app.get("/pdfs/:courseId", pdf.findAll);
 
-    app.put("/pdfs/:pdfId", pdf.update);
+    app.put("/pdfs/:pdfId", upload.any(), pdf.update);
 
     app.delete("/pdfs/:pdfId", pdf.delete);
 };
