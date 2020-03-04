@@ -15,9 +15,9 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-  Student.findById2(id).then((student) => {
-    //console.log("student deserialized: " + JSON.stringify(student));
-    done(null, student);
+  Student.findById2(id).then((user) => {
+    console.log("student deserialized: " + JSON.stringify(student));
+    done(null, user);
   }).catch(() => {
     console.log("Couldn't find by id");
   });
@@ -148,15 +148,18 @@ passport.use('local-login', new LocalStrategy({
   passReqToCallback: true
 },
   function(req, email, password, done) {
+    //console.log("email: " + email + " password: " + password);
+    //console.log(req.body);
     Student.findByEmail(email).then((value) => {
       console.log(value[0].password);
       if(value[0].password != password) {
-        console.log("Wrong password");
-        return done(null, false);
+        //console.log("Wrong password");
+        return done(null, false, { message: 'incorrect password'} );
       }
       return done(null, value);
     }).catch((reason) => {
-      return done(reason);
+      //console.log("error");
+      return done(reason, false, { message: 'invalid user' });
     })
   }
 ));

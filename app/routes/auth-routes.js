@@ -44,33 +44,25 @@ router.post('/signup', passport.authenticate('local-signup', {session: false}), 
     return res.json({status: 'success signup'});
 });
 
-router.post('/login', passport.authenticate('local-login', {session: false}), (req, res, next) => {
-    const { email, password } = req.body;
-    //console.log("email: " + email + " password: " + password);
-    let response;
-    if( email && password ) {
-        Student.findByEmail(email).then((value) => {
-            if(value[0].password === password) {
-                //console.log("Value: " + JSON.stringify(value[0]));
-                let payload = { id: value[0].id,
-                                email: value[0].email,
-                                f_name: value[0].f_name,
-                                l_name: value[0].l_name };
+router.post('/login', (req, res, next) => {
+    passport.authenticate('local-login', { session: false }, function(err, user, info) {
 
-                let token = jwt.sign(payload, jwtOptions.secretOrKey);
-                response = res.json({ id: payload.id,
-                                      email: payload.email,
-                                      f_name: payload.f_name,
-                                      l_name: payload.l_name,
-                                      token: token });
-            } else {
-                response = res.status(401).json({ msg: 'Password is incorrect'});
-            }
-        }).catch(() => {
-            response = res.status(500).json({msg: 'Error with login from server'});
-        });
-    }
-    return response;//res.json({status: 'success login'});
+        if(err) { console.log(err.sqlMessage); return res.status(404).json({msg: 'invalid user' }); } //return next(err); }
+        if(!user) { console.log("incorrect password"); return res.status(404).json({ msg: 'incorrect password'}); }
+
+        let payload = { id: user[0].id,
+            email: user[0].email,
+            f_name: user[0].f_name,
+            l_name: user[0].l_name,
+            role: user[0].role
+        };
+
+        let token = jwt.sign(payload, jwtOptions.secretOrKey);
+        response = res.json({ f_name: payload.f_name,
+                            l_name: payload.l_name,
+                            token: token });
+        return response; 
+    })(req, res, next);
 });
 
 router.get('/protected', passport.authenticate('jwt', { session: false }), function(req, res) {
