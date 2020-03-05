@@ -46,6 +46,7 @@ router.get('/', checkToken, (req, res) => {
 
             res.json({
                 id: authorizedData.id,
+                role: authorizedData.role,
                 email: authorizedData.email,
                 f_name: authorizedData.f_name,
                 l_name: authorizedData.l_name
