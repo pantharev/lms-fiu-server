@@ -124,13 +124,13 @@ app.get("/testpdf", (req, res) => {
 const sql = require("./app/models/db");
 
 io.on('connection', function (socket) {
-    console.log('a user connected');
+    console.log('a user connected: '+ socket.id);
     socket.on('search', (data) => {
         console.log(data);
         sql.query(`SELECT * FROM courses WHERE name LIKE '${data}%'`, (err, res) => {
             if (err)
                 return
-            io.emit('search-data', res);
+            io.to(socket.id).emit('search-data', res);
         });
     })
 })
