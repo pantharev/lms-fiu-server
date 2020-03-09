@@ -99,6 +99,20 @@ Course.updateById = (id, course, result) => {
     });
 };
 
+Course.updateSeatsById = (id, course, result) => {
+    return new Promise((resolve, reject) => {
+        sql.query("UPDATE courses SET seats = ? WHERE id = ?",
+            [course.seats, id], (err, res) => {
+                if(err) {
+                    result(err, null);
+                    return reject(err);
+                }
+                result(null, { id: id, ...course});
+                return resolve(res[0]);
+            });
+    });
+};
+
 Course.delete = (id, result) => {
     return new Promise((resolve, reject) => {
         sql.query("DELETE FROM courses WHERE id = ?", id, (err, res) => {

@@ -10,6 +10,8 @@ module.exports = app => {
 
     app.put("/courses/:courseId", passport.authenticate('jwt', { session: false }), courses.update);
 
+    app.put("/courses/s/:courseId", passport.authenticate('jwt', { session: false }), courses.updateSeats);
+
     app.delete("/courses/:courseId", passport.authenticate('jwt', { session: false }), courses.delete);
 
     app.delete("/courses", passport.authenticate('jwt', { session: false }), courses.deleteAll); 
