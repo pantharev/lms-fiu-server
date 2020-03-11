@@ -35,7 +35,7 @@ Survey.findByCourseId = (courseId, result) => {
 
 Survey.updateById = (id, survey, result) => {
     return new Promise((resolve, reject) => {
-        sql.query("UPDATE surveys SET name = ?, SET link = ? WHERE id = ?",
+        sql.query("UPDATE surveys SET name = ?, link = ? WHERE id = ?",
             [survey.name, survey.link, id], (err, res) => {
                 if(err) {
                     result(err, null);
