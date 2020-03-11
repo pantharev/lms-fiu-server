@@ -141,6 +141,7 @@ require("./app/routes/student-course.routes.js")(app);
 require("./app/routes/module.routes.js")(app);
 require("./app/routes/video.routes.js")(app);
 require("./app/routes/pdf.routes.js")(app, upload);
+require("./app/routes/survey.routes.js")(app);
 
 // [SH] Catch unauthorised errors
 app.use(function (err, req, res, next) {

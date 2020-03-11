@@ -1,27 +1,28 @@
 const sql = require("./db");
 
 // constructor
-const Video = function(video) {
-    this.link = video.link;
-    this.module_id = video.module_id
+const Survey = function(survey) {
+    this.name = survey.name;
+    this.link = survey.link;
+    this.module_id = survey.module_id;
 }
 
-Video.create = (newVideo, result) => {
+Survey.create = (newSurvey, result) => {
     return new Promise((resolve, reject) => {
-        sql.query("INSERT INTO videos SET ?", newVideo, (err, res) => {
+        sql.query("INSERT INTO surveys SET ?", newSurvey, (err, res) => {
             if(err) {
                 result(err, null);
                 return reject(err);
             }
-            result(null, { id: res.insertId, ...newVideo });
+            result(null, { id: res.insertId, ...newSurvey });
             return resolve(res);
         });
     });
 };
 
-Video.findByCourseId = (courseId, result) => {
+Survey.findByCourseId = (courseId, result) => {
     return new Promise((resolve, reject) => {
-        sql.query("SELECT * FROM contentInCourseModules WHERE course_id = ?", [courseId], (err, res) => {
+        sql.query("SELECT * FROM surveysInCourseModules WHERE course_id = ?", [courseId], (err, res) => {
             if(err) {
                 result(err, null);
                 return reject(err);
@@ -32,23 +33,23 @@ Video.findByCourseId = (courseId, result) => {
     });
 };
 
-Video.updateById = (id, video, result) => {
+Survey.updateById = (id, survey, result) => {
     return new Promise((resolve, reject) => {
-        sql.query("UPDATE videos SET link = ? WHERE id = ?",
-            [video.link, id], (err, res) => {
+        sql.query("UPDATE surveys SET name = ?, SET link = ? WHERE id = ?",
+            [survey.name, survey.link, id], (err, res) => {
                 if(err) {
                     result(err, null);
                     return reject(err);
                 }
-                result(null, { id: id, ...video});
+                result(null, { id: id, ...survey});
                 return resolve(res);
             });
     });
 };
 
-Video.delete = (id, result) => {
+Survey.delete = (id, result) => {
     return new Promise((resolve, reject) => {
-        sql.query("DELETE FROM videos WHERE id = ?", id, (err, res) => {
+        sql.query("DELETE FROM surveys WHERE id = ?", id, (err, res) => {
             if(err) {
                 result(err, null);
                 return reject(err);
@@ -59,4 +60,4 @@ Video.delete = (id, result) => {
     });
 };
 
-module.exports = Video;
+module.exports = Survey;
