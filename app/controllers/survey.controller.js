@@ -1,6 +1,6 @@
-const Video = require("../models/video.model");
+const Survey = require("../models/survey.model");
 
-// Create and Save a new Video
+// Create and Save a new Survey
 exports.create = (req, res) => {
     // Validate request
     if (!req.body) {
@@ -9,33 +9,34 @@ exports.create = (req, res) => {
         });
     }
 
-    // Create a Video
-    const video = new Video({
+    // Create a Survey
+    const survey = new Survey({
+        name: req.body.name,
         link: req.body.link,
         module_id: req.body.module_id
     });
 
-    // Save video in the database
-    Video.create(video, (err, data) => {
+    // Save survey in the database
+    Survey.create(survey, (err, data) => {
         if(err)
             res.status(500).send({
-                message: err.message || "Some error occured while creating the Video."
+                message: err.message || "Some error occured while creating the Survey."
             });
         else res.send(data);
     }).then(() => {
-        console.log('Created video successfully!');
+        console.log('Created survey successfully!');
     }).catch((err) => {
-        console.log(`Error creating the video\n${err}`);
+        console.log(`Error creating the survey\n${err}`);
     });
 };
 
-// Find Videos in Module with a courseId
+// Find Surveys in Module with a courseId
 exports.findAll = (req, res) => {
 
-    const className = "Video";
+    const className = "Survey";
     const reqParamId = req.params.courseId;
 
-    Video.findByCourseId(reqParamId, (err, data) => {
+    Survey.findByCourseId(reqParamId, (err, data) => {
         if(err) {
             if(err.kind == "not_found"){
                 res.status(404).send({
@@ -56,7 +57,7 @@ exports.findAll = (req, res) => {
     })
 };
 
-// Update a Video identified by the videoId in the request
+// Update a Survey identified by the surveyId in the request
 exports.update = (req, res) => {
     // Validate Request
     if(!req.body) {
@@ -65,10 +66,10 @@ exports.update = (req, res) => {
         });
     }
 
-    const className = "Video";
-    const reqParamID = req.params.videoId;
+    const className = "Survey";
+    const reqParamID = req.params.surveyId;
 
-    Video.updateById(reqParamID, new Video(req.body), (err, data) => {
+    Survey.updateById(reqParamID, new Survey(req.body), (err, data) => {
         if(err) {
             if(err.kind == "not_found") {
                 res.status(404).send({
@@ -89,12 +90,12 @@ exports.update = (req, res) => {
     });
 };
 
-// Delete a Video with the specified videoId in the request
+// Delete a Survey with the specified surveyId in the request
 exports.delete = (req, res) => {
-    const className = "Video";
-    const reqParamID = req.params.videoId;
+    const className = "Survey";
+    const reqParamID = req.params.surveyId;
     
-    Video.delete(reqParamID, (err, data) => {
+    Survey.delete(reqParamID, (err, data) => {
         if(err) {
             if(err.kind == "not_found") {
                 res.status(404).send({

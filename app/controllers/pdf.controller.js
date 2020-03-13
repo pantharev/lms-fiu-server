@@ -1,41 +1,53 @@
-const Video = require("../models/video.model");
+const Pdf = require("../models/pdf.model");
 
-// Create and Save a new Video
+// Create and Save a new Pdf
 exports.create = (req, res) => {
     // Validate request
+    if(!req.files){
+        res.status(400).send({
+            message: "File not included!"
+        })
+        return;
+    }
+
     if (!req.body) {
         res.status(400).send({
             message: "Content cannot be empty!"
         });
     }
 
-    // Create a Video
-    const video = new Video({
-        link: req.body.link,
-        module_id: req.body.module_id
+
+    const file = req.files[0].buffer;
+
+    // Create a Pdf
+    const pdf = new Pdf({
+        pdf: file,
+        module_id: req.body.fileKey
     });
 
-    // Save video in the database
-    Video.create(video, (err, data) => {
+    // Save pdf in the database
+    pdf.create(pdf, (err, data) => {
         if(err)
             res.status(500).send({
-                message: err.message || "Some error occured while creating the Video."
+                message: err.message || "Some error occured while creating the Pdf."
             });
         else res.send(data);
     }).then(() => {
-        console.log('Created video successfully!');
+        console.log('Created pdf successfully!');
     }).catch((err) => {
-        console.log(`Error creating the video\n${err}`);
+        console.log(`Error creating the pdf\n${err}`);
     });
 };
 
-// Find Videos in Module with a courseId
+// Find Pdfs in Module with a courseId
 exports.findAll = (req, res) => {
 
-    const className = "Video";
+    const className = "Pdf";
     const reqParamId = req.params.courseId;
 
-    Video.findByCourseId(reqParamId, (err, data) => {
+    const pdf = new Pdf({});
+
+    pdf.findByCourseId(reqParamId, (err, data) => {
         if(err) {
             if(err.kind == "not_found"){
                 res.status(404).send({
@@ -56,19 +68,34 @@ exports.findAll = (req, res) => {
     })
 };
 
-// Update a Video identified by the videoId in the request
+// Update a Pdf identified by the pdfId in the request
 exports.update = (req, res) => {
-    // Validate Request
+    // Validate request
+    if(!req.files){
+        res.status(400).send({
+            message: "File not included!"
+        })
+        return;
+    }
+
     if(!req.body) {
         req.status(400).send({
             message: "Content cannot be empty!"
         });
     }
 
-    const className = "Video";
-    const reqParamID = req.params.videoId;
+    const file = req.files[0].buffer;
 
-    Video.updateById(reqParamID, new Video(req.body), (err, data) => {
+    // Create a Pdf
+    const pdf = new Pdf({
+        pdf: file,
+        module_id: req.body.fileKey
+    });
+
+    const className = "Pdf";
+    const reqParamID = req.params.pdfId;
+
+    pdf.updateById(reqParamID, pdf, (err, data) => {
         if(err) {
             if(err.kind == "not_found") {
                 res.status(404).send({
@@ -89,12 +116,14 @@ exports.update = (req, res) => {
     });
 };
 
-// Delete a Video with the specified videoId in the request
+// Delete a Pdf with the specified pdfId in the request
 exports.delete = (req, res) => {
-    const className = "Video";
-    const reqParamID = req.params.videoId;
-    
-    Video.delete(reqParamID, (err, data) => {
+    const className = "Pdf";
+    const reqParamID = req.params.pdfId;
+
+    const pdf = new Pdf({});
+
+    pdf.delete(reqParamID, (err, data) => {
         if(err) {
             if(err.kind == "not_found") {
                 res.status(404).send({

@@ -70,6 +70,36 @@ exports.findOne = (req, res) => {
     })
 };
 
+// Update a Course's seats identified by the courseId in the request
+exports.updateSeats = (req, res) => {
+    // Validate Request
+    if(!req.body) {
+        req.status(400).send({
+            message: "Content cannot be empty!"
+        });
+    }
+
+    Course.updateSeatsById(req.params.courseId, new Course(req.body), (err, data) => {
+        if(err) {
+            if(err.kind == "not_found") {
+                res.status(404).send({
+                    message: `Not found Course with id ${req.params.courseId}.`
+                });
+            } else {
+                res.status(500).send({
+                    message: err.message || "Error updating Course with id " + req.params.courseId
+                });
+            }
+        } else {
+            res.send(data);
+        }
+    }).then(() => {
+        console.log(`Course UpdateSeatsByID(${req.params.courseId}) Promise resolved`);
+    }).catch((err) => {
+        console.log(`Course UpdateSeatsById(${req.params.courseId}) Promise Rejected \n${err}`);
+    });
+};
+
 // Update a Course identified by the courseId in the request
 exports.update = (req, res) => {
     // Validate Request

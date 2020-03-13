@@ -1,4 +1,5 @@
 const StudentCourse = require("../models/student-course.model");
+const _ = require('lodash');
 
 // Create and Save a new StudentCourse
 exports.create = (req, res) => {
@@ -74,8 +75,20 @@ exports.findOneStudent = (req, res) => {
                 });
             }
         } else {
+            //res.send(data);
+        }
+    }).then((data) => {
+        if(_.isEmpty(data)){
+            console.log("data is empty");
+            res.status(404).json({ msg: "Student has no courses" })
+        }
+        else{
+            //console.log("data: " + data);
             res.send(data);
         }
+    }).catch((reason) => {
+        console.log("err: " + reason);
+        res.status(500).json({ msg: "Error retrieving studentcourses "});
     })
 };
 

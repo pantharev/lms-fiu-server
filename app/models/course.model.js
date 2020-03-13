@@ -51,7 +51,7 @@ Course.getAll = (req, result) => {
                 numPages = Math.ceil(numRows / numPerPage);
                 console.log('number of pages: ', numPages);
             });
-            connection.query("SELECT * FROM courses ORDER BY id ASC LIMIT ? , ?", [skip, numPerPage], (err, res) => {
+            connection.query("SELECT * FROM courses ORDER BY name ASC LIMIT ? , ?", [skip, numPerPage], (err, res) => {
                 if(err) {
                     result(err, null);
                     return reject(err);
@@ -89,6 +89,20 @@ Course.updateById = (id, course, result) => {
     return new Promise((resolve, reject) => {
         sql.query("UPDATE courses SET name = ?, description = ?, seats = ?, start_date = ?, end_date = ? WHERE id = ?",
             [course.name, course.description, course.seats, course.start_date, course.end_date, id], (err, res) => {
+                if(err) {
+                    result(err, null);
+                    return reject(err);
+                }
+                result(null, { id: id, ...course});
+                return resolve(res[0]);
+            });
+    });
+};
+
+Course.updateSeatsById = (id, course, result) => {
+    return new Promise((resolve, reject) => {
+        sql.query("UPDATE courses SET seats = ? WHERE id = ?",
+            [course.seats, id], (err, res) => {
                 if(err) {
                     result(err, null);
                     return reject(err);
