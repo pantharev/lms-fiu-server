@@ -1,4 +1,4 @@
-const Module = require("../models/module.model");
+const CourseDetails = require("../models/course-details.model");
 
 exports.create = (req, res) => {
     // Validate request
@@ -8,13 +8,12 @@ exports.create = (req, res) => {
         });
     }
     
-    const moduleO = new Module({
-        number: req.body.number,
-        title: req.body.title,
-        lockedUntil: req.body.lockedUntil
+    const courseDetails = new CourseDetails({
+        content: req.body.content,
+        course_id: req.body.course_id
     });
-
-    Module.create(req.params.courseId, moduleO, (err, data) => {
+    
+    CourseDetails.create(courseDetails, (err, data) => {
         if(err)
         res.status(500).send({
             message: err.message || "Some error occured while creating the Student."
@@ -23,13 +22,13 @@ exports.create = (req, res) => {
     })
 }
 
-// Find a single Module with a moduleId
+// Find a single CourseDetails with a courseId
 exports.findOne = (req, res) => {
 
-    const className = "Module";
-    const reqParamId = req.params.moduleId;
+    const className = "CourseDetails";
+    const reqParamId = req.params.courseId;
 
-    Module.findById(reqParamId, (err, data) => {
+    CourseDetails.findById(reqParamId, (err, data) => {
         if(err) {
             if(err.kind == "not_found"){
                 res.status(404).send({
@@ -46,30 +45,11 @@ exports.findOne = (req, res) => {
     }).then(() => {
         console.log(`${className} findById(${reqParamId}) was found`);
     }).catch((err) => {
-        console.log(`Error findById(${reqParamId}), couldn't find/retrieve course\n${err}`);
+        console.log(`Error findById(${reqParamId}), couldn't find/retrieve ${className}\n${err}`);
     })
 };
 
-// Find all modules in a course
-exports.findOneCourse = (req, res) => {
-    Module.findByCourseId(req.params.courseId, (err, data) => {
-        if(err) {
-            if(err.kind == "not_found"){
-                res.status(404).send({
-                    message: `Not found course with id ${req.params.courseId}.`
-                });
-            } else {
-                res.status(500).send({
-                    message: "Error retrieving course with id " + req.params.courseId
-                });
-            }
-        } else {
-            res.send(data);
-        }
-    })
-};
-
-// Update a Module identified by the moduleId in the request
+// Update a CourseDetails identified by the CourseDetailsId in the request
 exports.update = (req, res) => {
     // Validate Request
     if(!req.body) {
@@ -78,10 +58,10 @@ exports.update = (req, res) => {
         });
     }
 
-    const className = "Module";
-    const reqParamID = req.params.moduleId;
+    const className = "CourseDetails";
+    const reqParamID = req.params.courseDetailsId;
 
-    Module.updateById(reqParamID, new Module(req.body), (err, data) => {
+    CourseDetails.updateById(reqParamID, new CourseDetails(req.body), (err, data) => {
         if(err) {
             if(err.kind == "not_found") {
                 res.status(404).send({
@@ -102,11 +82,12 @@ exports.update = (req, res) => {
     });
 };
 
-// Delete a Module with the specified moduleId in the request
-exports.delete = (req, res) => {
-    const className = "Module";
-    const reqParamID = req.params.moduleId;
-    Module.delete(reqParamID, (err, data) => {
+// Delete a CourseDetails with the specified CourseDetailsId in the request
+exports.clear = (req, res) => {
+    const className = "CourseDetails";
+    const reqParamID = req.params.courseDetailsId;
+
+    CourseDetails.clear(reqParamID, (err, data) => {
         if(err) {
             if(err.kind == "not_found") {
                 res.status(404).send({
@@ -118,10 +99,10 @@ exports.delete = (req, res) => {
                 });
             }
         } else {
-            res.send({ message: `${className} was deleted successfully!`});
+            res.send({ message: `${className} was cleared successfully!`});
         }
     }).then(() => {
-        console.log(`Resolved: ${className} ${reqParamID} was deleted successfully!`);
+        console.log(`Resolved: ${className} ${reqParamID} was cleared successfully!`);
     }).catch((err) => {
         if(err.kind == "not_found")
             console.log(`Rejected: Couldn't find ${className} with id ${reqParamID}\n${err}`);

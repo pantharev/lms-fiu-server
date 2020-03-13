@@ -2,11 +2,6 @@ const sql = require("./db");
 
 // constructor
 const CourseDetails = function(courseDetails) {
-    this.course_name = courseDetails.course_name;
-    this.instructor_name = courseDetails.instructor_name;
-    this.office = courseDetails.office;
-    this.phone = courseDetails.phone;
-    this.email = courseDetails.email;
     this.content = courseDetails.content;
     this.course_id = courseDetails.course_id;
 };
@@ -37,16 +32,31 @@ CourseDetails.findById = (courseId, result) => {
     });
 };
 
-CourseDetails.updateById = (id, course, result) => {
+CourseDetails.updateById = (id, courseDetails, result) => {
     return new Promise((resolve, reject) => {
-        sql.query("UPDATE course_details SET name = ?, description = ?, seats = ?, start_date = ?, end_date = ? WHERE id = ?",
-            [course.name, course.description, course.seats, course.start_date, course.end_date, id], (err, res) => {
+        sql.query("UPDATE course_details SET content = ? WHERE id = ?",
+            [courseDetails.content, id], (err, res) => {
                 if(err) {
                     result(err, null);
                     return reject(err);
                 }
-                result(null, { id: id, ...course});
+                result(null, { id: id, ...courseDetails});
                 return resolve(res[0]);
             });
     });
 };
+
+CourseDetails.clear = (id, result) => {
+    return new Promise((resolve, reject) => {
+        sql.query("UPDATE course_details SET content = '' WHERE id = ?", id, (err, res) => {
+            if(err) {
+                result(err, null);
+                return reject(err);
+            }
+            result(null, res);
+            return resolve(res[0]);
+        });
+    });
+};
+
+module.exports = CourseDetails;
