@@ -158,6 +158,10 @@ app.post('/', function (req, res) {
     res.send("Post request sent to backend");
 });
 
+app.post('/userdata', function (req, res) {
+    res.send(req.body);
+});
+
 
 http.listen(port, () => {
     console.log("http Server is running on port: " + port);
