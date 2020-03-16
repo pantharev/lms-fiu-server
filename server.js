@@ -76,7 +76,7 @@ app.get("/", (req, res) => {
 const sql = require("./app/models/db");
 
 io.on('connection', function (socket) {
-    console.log('a user connected: '+ socket.id);
+    console.log('a user connected: ' + socket.id);
     socket.on('search', (data) => {
         console.log(data);
         sql.query(`SELECT * FROM courses WHERE name LIKE '${data}%'`, (err, res) => {
