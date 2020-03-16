@@ -74,6 +74,19 @@ StudentCourse.getAll = result => {
     });
 };
 
+StudentCourse.getAvgPts = (courseId, studentId, result) => {
+    return new Promise((resolve, reject) => {
+        sql.query("SELECT AVG(points) as average FROM studentsincourses WHERE course_id = ? and student_id != ?", [courseId, studentId], (err, res) => {
+            if(err) {
+                result(err, null);
+                return reject(err);
+            }
+            result(null, res);
+            return resolve(res[0]);
+        })
+    })
+}
+
 StudentCourse.updateById = (id, studentCourse, result) => {
     return new Promise((resolve, reject) => {
         sql.query("UPDATE students_courses SET enrollment_status = ? WHERE student_id = ? AND course_id = ?",
