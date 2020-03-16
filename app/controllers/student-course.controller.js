@@ -61,6 +61,36 @@ exports.findOne = (req, res) => {
     })
 };
 
+exports.getAvgPts = (req, res) => {
+    StudentCourse.getAvgPts(req.params.courseId, req.params.studentId, (err, data) => {
+        if(err) {
+            if(err.kind == "not_found"){
+                res.status(404).send({
+                    message: `Not found StudentCourse with id ${req.params.studentId}.`
+                });
+            } else {
+                res.status(500).send({
+                    message: "Error retrieving StudentCourse with id " + req.params.studentId
+                });
+            }
+        } else {
+            //res.send(data);
+        }
+    }).then((data) => {
+        if(_.isEmpty(data)){
+            console.log("data is empty");
+            res.status(404).json({ msg: "Student has no courses" })
+        }
+        else{
+            //console.log("data: " + data);
+            res.send(data);
+        }
+    }).catch((reason) => {
+        console.log("err: " + reason);
+        res.status(500).json({ msg: "Error retrieving studentcourses "});
+    })
+}
+
 // Find courses the student is enrolled in
 exports.findOneStudent = (req, res) => {
     StudentCourse.findByStudentId(req.params.studentId, (err, data) => {
