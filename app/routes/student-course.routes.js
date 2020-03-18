@@ -9,6 +9,8 @@ module.exports = app => {
 
     app.get("/student-courses/c/:courseId", studentcourse.findOneCourse);
 
+    app.get("/student-courses/p/:courseId/:studentId", studentcourse.getAvgPts);
+
     app.put("/student-courses/:studentId", studentcourse.update);
 
     app.delete("/student-courses/:studentId/:courseId", studentcourse.delete);

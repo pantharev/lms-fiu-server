@@ -69,57 +69,9 @@ const profileRoutes = require('./app/routes/profile-routes');
 app.use('/auth', authRoutes);
 app.use('/profile', profileRoutes);
 
-/*app.all(() => {
-res.header('Access-Control-Allow-Origin', '*'); // your website
-//res.header('Access-Control-Allow-Credentials', 'false');
-res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-res.header('Access-Control-Allow-Headers', 'accept, Content-Type, Authorization, Content-Length, X-Requested-With')
-})*/
-
 app.get("/", (req, res) => {
     res.send('Hello World4');
 });
-
-
-function readPdfFile(file) {
-    const bitmap = fs.readFileSync(file);
-    const buf = new Buffer.from(bitmap);
-    return buf;
-}
-
-const inputfile = './assets/file.pdf';
-const outputfile = './assets/outfile.pdf';
-
-const data = readPdfFile(inputfile);
-
-app.post("/testpdf", upload.any(), (req, res) => {
-    console.log("testpdf posted");
-    if (req.files) {
-        const file = req.files;
-        console.log(file[0].buffer);
-        console.log("module_id: " + req.body.fileKey);
-    }
-    /*sql.query("INSERT INTO pdfs(pdf, module_id) VALUES(?, ?)", [data, 1], (err, res) => {
-        if(err) throw err;
-        console.log("BLOB data inserted!");
-    })*/
-    /*let file = fs.readFileSync('./assets/file.pdf');
-    res.contentType("application/pdf");
-    res.send(file);*/
-    //res.json({ test: "Hello test!"});
-})
-
-app.get("/testpdf", (req, res) => {
-    sql.query("SELECT * FROM pdfs", (err, res) => {
-        if (err) throw err;
-        const row = res[res.length - 1];
-        const data = row.pdf;
-        console.log("BLOB data read! " + data);
-        const buf = new Buffer.from(data, "binary");
-        fs.writeFileSync(outputfile, buf);
-        console.log("New file output: " + outputfile);
-    })
-})
 
 const sql = require("./app/models/db");
 
@@ -142,6 +94,7 @@ require("./app/routes/module.routes.js")(app);
 require("./app/routes/video.routes.js")(app);
 require("./app/routes/pdf.routes.js")(app, upload);
 require("./app/routes/survey.routes.js")(app);
+require("./app/routes/course-details.routes.js")(app);
 
 // [SH] Catch unauthorised errors
 app.use(function (err, req, res, next) {
