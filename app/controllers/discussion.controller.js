@@ -15,7 +15,8 @@ exports.create = (req, res) => {
         post: req.body.post,
         created: req.body.created,
         changed: req.body.changed,
-        module_id: req.body.module_id
+        module_id: req.body.module_id,
+        user_id: req.body.user_id
     });
 
     // Save Discussion in the database

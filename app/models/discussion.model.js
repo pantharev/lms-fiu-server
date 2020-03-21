@@ -7,6 +7,7 @@ const Discussion = function(discussion) {
     this.created = discussion.created;
     this.changed = discussion.changed;
     this.module_id = discussion.module_id;
+    this.user_id = discussion.user_id;
 }
 
 Discussion.create = (newDiscussion, result) => {
