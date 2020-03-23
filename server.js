@@ -96,6 +96,7 @@ require("./app/routes/pdf.routes.js")(app, upload);
 require("./app/routes/survey.routes.js")(app);
 require("./app/routes/course-details.routes.js")(app);
 require("./app/routes/discussion.routes.js")(app);
+require("./app/routes/global-announcement.routes.js")(app);
 
 // [SH] Catch unauthorised errors
 app.use(function (err, req, res, next) {
