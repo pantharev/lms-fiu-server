@@ -42,8 +42,8 @@ GlobalAnnouncement.findById = (globalAnnouncementId, result) => {
                 result(err, null);
                 return reject(err);
             }
-            result(null, res);
-            return resolve(res);
+            result(null, res[0]);
+            return resolve(res[0]);
         });
     });
 };
@@ -57,7 +57,7 @@ GlobalAnnouncement.updateById = (id, globalAnnouncement, result) => {
                     return reject(err);
                 }
                 result(null, { id: id, ...globalAnnouncement});
-                return resolve(res);
+                return resolve(res[0]);
             });
     });
 };
@@ -69,8 +69,8 @@ GlobalAnnouncement.delete = (id, result) => {
                 result(err, null);
                 return reject(err);
             }
-            result(null, res);
-            return resolve(res);
+            result(null, res[0]);
+            return resolve(res[0]);
         });
     });
 };
