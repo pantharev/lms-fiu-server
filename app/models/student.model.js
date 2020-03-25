@@ -59,6 +59,8 @@ Student.findByEmail = (studentEmail) => {
 }
 
 Student.findByUserId = (userId) => {
+    return "MADE IT TO FINDBYUSERID";
+    /*
     return new Promise((resolve, reject) => {
         sql.query("CALL selectStudentByUserId(?)", [userId], (err, res) => {
             if (err) {
@@ -67,6 +69,7 @@ Student.findByUserId = (userId) => {
             return resolve(res[0]);
         });
     });
+    */
 }
 
 Student.getAll = result => {
