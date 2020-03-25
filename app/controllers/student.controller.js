@@ -60,15 +60,15 @@ exports.findOne = (req, res) => {
 
 // Find a single Student with a user ID
 exports.findOne2 = (req, res) => {
-    Student.findByUserId(req.params.user_id, (err, data) => {
+    Student.findByUserId(req.params.userId, (err, data) => {
         if (err) {
             if (err.kind == "not_found") {
                 res.status(404).send({
-                    message: `Not found Student with id ${req.params.user_id}.`
+                    message: `Not found Student with id ${req.params.userId}.`
                 });
             } else {
                 res.status(500).send({
-                    message: "Error retrieving Student with id " + req.params.user_id
+                    message: "Error retrieving Student with id " + req.params.userId
                 });
             }
         } else {
@@ -111,15 +111,15 @@ exports.updateByUserId = (req, res) => {
             message: "Content cannot be empty!"
         });
     }
-    Student.updateByUserId(req.params.user_id, new Student(req.body), (err, data) => {
+    Student.updateByUserId(req.params.userId, new Student(req.body), (err, data) => {
         if (err) {
             if (err.kind == "not_found") {
                 res.status(404).send({
-                    message: `Not found Student with id ${req.params.user_id}.`
+                    message: `Not found Student with id ${req.params.userId}.`
                 });
             } else {
                 res.status(500).send({
-                    message: "Error updating Student with id " + req.params.user_id
+                    message: "Error updating Student with id " + req.params.userId
                 });
             }
         } else {
