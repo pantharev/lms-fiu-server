@@ -24,7 +24,7 @@ Announcement.create = (newAnnouncement, result) => {
 
 Announcement.findAll = (result) => {
     return new Promise((resolve, reject) => {
-        sql.query("SELECT * FROM announcements", (err, res) => {
+        sql.query("SELECT * FROM announcementsInCourses", (err, res) => {
             if(err) {
                 result(err, null);
                 return reject(err);
@@ -35,15 +35,15 @@ Announcement.findAll = (result) => {
     });
 };
 
-Announcement.findById = (announcementId, result) => {
+Announcement.findByCourseId = (courseId, result) => {
     return new Promise((resolve, reject) => {
-        sql.query("SELECT * FROM announcements WHERE id = ?", [announcementId], (err, res) => {
+        sql.query("SELECT * FROM announcementsInCourses WHERE course_id = ?", [courseId], (err, res) => {
             if(err) {
                 result(err, null);
                 return reject(err);
             }
-            result(null, res[0]);
-            return resolve(res[0]);
+            result(null, res);
+            return resolve(res);
         });
     });
 };

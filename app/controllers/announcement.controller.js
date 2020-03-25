@@ -58,13 +58,13 @@ exports.findAll = (req, res) => {
     })
 };
 
-// Find Announcement by id
-exports.findById = (req, res) => {
+// Find Announcement by courseId
+exports.findByCourseId = (req, res) => {
 
     const className = "Announcement";
-    const reqParamId = req.params.announcementId;
+    const reqParamId = req.params.courseId;
 
-    Announcement.findById(reqParamId, (err, data) => {
+    Announcement.findByCourseId(reqParamId, (err, data) => {
         if(err) {
             if(err.kind == "not_found"){
                 res.status(404).send({
