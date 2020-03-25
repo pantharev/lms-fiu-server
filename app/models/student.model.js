@@ -104,7 +104,7 @@ Student.updateByUserId = (user_id, student, result) => {
                     result(err, null);
                     return reject(err);
                 }
-                result(null, { id: id, ...student });
+                result(null, { user_id: user_id, ...student });
                 return resolve(res[0]);
             });
     });
