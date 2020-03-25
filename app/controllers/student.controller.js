@@ -60,8 +60,6 @@ exports.findOne = (req, res) => {
 
 // Find a single Student with a user ID
 exports.findOne2 = (req, res) => {
-    res.send(req.params.userId);
-    /*
     Student.findByUserId(req.params.user_id, (err, data) => {
         if (err) {
             if (err.kind == "not_found") {
@@ -77,7 +75,6 @@ exports.findOne2 = (req, res) => {
             res.send(data);
         }
     })
-    */
 };
 
 // Update a Student identified by the studentId in the request
@@ -114,8 +111,6 @@ exports.updateByUserId = (req, res) => {
             message: "Content cannot be empty!"
         });
     }
-    res.send(req.params.userId);
-    /*
     Student.updateByUserId(req.params.user_id, new Student(req.body), (err, data) => {
         if (err) {
             if (err.kind == "not_found") {
@@ -131,7 +126,6 @@ exports.updateByUserId = (req, res) => {
             res.send(data);
         }
     });
-    */
 };
 
 // Delete a Student with the specified studentId in the request
