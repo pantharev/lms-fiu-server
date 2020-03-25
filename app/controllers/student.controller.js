@@ -60,7 +60,7 @@ exports.findOne = (req, res) => {
 
 // Find a single Student with a user ID
 exports.findOne2 = (req, res) => {
-    res.send(req);
+    res.send(req.params.userId);
     /*
     Student.findByUserId(req.params.user_id, (err, data) => {
         if (err) {
@@ -114,7 +114,7 @@ exports.updateByUserId = (req, res) => {
             message: "Content cannot be empty!"
         });
     }
-    res.send(req);
+    res.send(req.params.userId);
     /*
     Student.updateByUserId(req.params.user_id, new Student(req.body), (err, data) => {
         if (err) {
