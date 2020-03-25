@@ -3,7 +3,7 @@ const sql = require("./db");
 // constructor
 const Video = function(video) {
     this.link = video.link;
-    this.module_id = video.module_id
+    this.module_id = video.module_id;
 }
 
 Video.create = (newVideo, result) => {
