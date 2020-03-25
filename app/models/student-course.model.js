@@ -5,6 +5,7 @@ const StudentCourse = function(studentCourse) {
     this.student_id = studentCourse.student_id;
     this.course_id = studentCourse.course_id;
     this.enrollment_status = studentCourse.enrollment_status;
+    this.points = studentCourse.points;
 };
 
 StudentCourse.create = (newStudentCourse, result) => {
