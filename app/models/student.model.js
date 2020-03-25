@@ -59,8 +59,6 @@ Student.findByEmail = (studentEmail) => {
 }
 
 Student.findByUserId = (userId) => {
-    return "MADE IT TO FINDBYUSERID";
-    /*
     return new Promise((resolve, reject) => {
         sql.query("CALL selectStudentByUserId(?)", [userId], (err, res) => {
             if (err) {
@@ -69,7 +67,6 @@ Student.findByUserId = (userId) => {
             return resolve(res[0]);
         });
     });
-    */
 }
 
 Student.getAll = result => {
@@ -100,8 +97,6 @@ Student.updateById = (id, student, result) => {
 };
 
 Student.updateByUserId = (user_id, student, result) => {
-    return "MADE IT TO USER ID";
-    /*
     return new Promise((resolve, reject) => {
         sql.query("UPDATE students SET email = ?, f_name = ?, l_name = ?, active = ? WHERE user_id = ?",
             [student.email, student.f_name, student.l_name, student.active, user_id], (err, res) => {
@@ -113,7 +108,6 @@ Student.updateByUserId = (user_id, student, result) => {
                 return resolve(res[0]);
             });
     });
-    */
 };
 
 Student.delete = (id, result) => {
