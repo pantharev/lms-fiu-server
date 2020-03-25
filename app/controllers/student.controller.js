@@ -64,11 +64,11 @@ exports.findOne2 = (req, res) => {
         if (err) {
             if (err.kind == "not_found") {
                 res.status(404).send({
-                    message: `Not found Student with id ${req.params.studentId}.`
+                    message: `Not found Student with id ${req.params.user_id}.`
                 });
             } else {
                 res.status(500).send({
-                    message: "Error retrieving Student with id " + req.params.studentId
+                    message: "Error retrieving Student with id " + req.params.user_id
                 });
             }
         } else {
@@ -103,6 +103,7 @@ exports.update = (req, res) => {
     });
 };
 
+// Update a Student identified by the userId in the request
 exports.updateByUserId = (req, res) => {
     // Validate Request
     if (!req.body) {
