@@ -14,12 +14,13 @@ exports.create = (req, res) => {
         email: req.body.email,
         f_name: req.body.f_name,
         l_name: req.body.l_name,
+        user_id: req.body.user_id,
         active: req.body.active
     });
 
     // Save student in the database
     Student.create(student, (err, data) => {
-        if(err)
+        if (err)
             res.status(500).send({
                 message: err.message || "Some error occured while creating the Student."
             });
@@ -30,7 +31,7 @@ exports.create = (req, res) => {
 // Retrieve all Students from the database.
 exports.findAll = (req, res) => {
     Student.getAll((err, data) => {
-        if(err)
+        if (err)
             res.status(500).send({
                 message: err.message || "Some error occurred while retrieving Students."
             });
@@ -41,8 +42,27 @@ exports.findAll = (req, res) => {
 // Find a single Student with a studentId
 exports.findOne = (req, res) => {
     Student.findById(req.params.studentId, (err, data) => {
-        if(err) {
-            if(err.kind == "not_found"){
+        if (err) {
+            if (err.kind == "not_found") {
+                res.status(404).send({
+                    message: `Not found Student with id ${req.params.studentId}.`
+                });
+            } else {
+                res.status(500).send({
+                    message: "Error retrieving Student with id " + req.params.studentId
+                });
+            }
+        } else {
+            res.send(data);
+        }
+    })
+};
+
+// Find a single Student with a user ID
+exports.findOne2 = (req, res) => {
+    Student.findByUserId(req.params.user_id, (err, data) => {
+        if (err) {
+            if (err.kind == "not_found") {
                 res.status(404).send({
                     message: `Not found Student with id ${req.params.studentId}.`
                 });
@@ -60,21 +80,46 @@ exports.findOne = (req, res) => {
 // Update a Student identified by the studentId in the request
 exports.update = (req, res) => {
     // Validate Request
-    if(!req.body) {
+    if (!req.body) {
         req.status(400).send({
             message: "Content cannot be empty!"
         });
     }
 
-    Student.updateById(req.params.studentId, new Student(req.body), (err, data) => {
-        if(err) {
-            if(err.kind == "not_found") {
+    Student.updateById(req.params.id, new Student(req.body), (err, data) => {
+        if (err) {
+            if (err.kind == "not_found") {
                 res.status(404).send({
-                    message: `Not found Student with id ${req.params.studentId}.`
+                    message: `Not found Student with id ${req.params.id}.`
                 });
             } else {
                 res.status(500).send({
-                    message: "Error updating Student with id " + req.params.studentId
+                    message: "Error updating Student with id " + req.params.id
+                });
+            }
+        } else {
+            res.send(data);
+        }
+    });
+};
+
+exports.updateByUserId = (req, res) => {
+    // Validate Request
+    if (!req.body) {
+        req.status(400).send({
+            message: "Content cannot be empty!"
+        });
+    }
+
+    Student.updateByUserId(req.params.user_id, new Student(req.body), (err, data) => {
+        if (err) {
+            if (err.kind == "not_found") {
+                res.status(404).send({
+                    message: `Not found Student with id ${req.params.user_id}.`
+                });
+            } else {
+                res.status(500).send({
+                    message: "Error updating Student with id " + req.params.user_id
                 });
             }
         } else {
@@ -86,8 +131,8 @@ exports.update = (req, res) => {
 // Delete a Student with the specified studentId in the request
 exports.delete = (req, res) => {
     Student.delete(req.params.studentId, (err, data) => {
-        if(err) {
-            if(err.kind == "not_found") {
+        if (err) {
+            if (err.kind == "not_found") {
                 res.status(404).send({
                     message: `Not found Student with id ${req.params.studentId}.`
                 });
@@ -97,7 +142,7 @@ exports.delete = (req, res) => {
                 });
             }
         } else {
-            res.send({ message: `Student was deleted successfully!`});
+            res.send({ message: `Student was deleted successfully!` });
         }
     });
 };
@@ -105,12 +150,12 @@ exports.delete = (req, res) => {
 // Delete all Students from the database
 exports.deleteAll = (req, res) => {
     Student.deleteAll((err, data) => {
-        if(err)
+        if (err)
             res.status(500).send({
                 message: err.message || "Some error occurred while removing all Students."
             });
         else
-            res.send({ message: "All Students were deleted successfully!"});
+            res.send({ message: "All Students were deleted successfully!" });
     });
 };
 
