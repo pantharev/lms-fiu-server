@@ -35,6 +35,19 @@ Announcement.findAll = (result) => {
     });
 };
 
+Announcement.findById = (announcementId, result) => {
+    return new Promise((resolve, reject) => {
+        sql.query("SELECT * FROM announcements WHERE id = ?", announcementId, (err, res) => {
+            if(err){
+                result(err, null);
+                return reject(err);
+            }
+            result(null, res[0]);
+            return resolve(res[0]);
+        })
+    })
+}
+
 Announcement.findByCourseId = (courseId, result) => {
     return new Promise((resolve, reject) => {
         sql.query("SELECT * FROM announcementsInCourses WHERE course_id = ?", [courseId], (err, res) => {
