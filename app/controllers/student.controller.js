@@ -132,21 +132,21 @@ exports.updateByUserId = (req, res) => {
 // Update a Student identified by the userId in the request
 exports.updateByUserEmail = (req, res) => {
     // Validate Request
-    console.log(req.params.email);
+    console.log(req.body.email);
     if (!req.body) {
         req.status(400).send({
             message: "Content cannot be empty!"
         });
     }
-    Student.updateByUserEmail(req.params.email, new Student(req.body), (err, data) => {
+    Student.updateByUserEmail(req.body.email, new Student(req.body), (err, data) => {
         if (err) {
             if (err.kind == "not_found") {
                 res.status(404).send({
-                    message: `No Student found with email ${req.params.email}.`
+                    message: `No Student found with email ${req.body.email}.`
                 });
             } else {
                 res.status(500).send({
-                    message: "Error updating Student with email " + req.params.email
+                    message: "Error updating Student with email " + req.body.email
                 });
             }
         } else {
