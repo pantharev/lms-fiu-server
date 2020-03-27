@@ -112,7 +112,7 @@ Student.updateByUserId = (user_id, student, result) => {
 
 Student.updateByUserEmail = (email, student, result) => {
     return new Promise((resolve, reject) => {
-        sql.query("UPDATE students SET user_id = ?, f_name = ?, l_name = ?, active = ? WHERE email = ?",
+        sql.query("UPDATE students SET user_id = ?, f_name = ?, l_name = ?, WHERE email = ?",
             [student.user_id, student.f_name, student.l_name, student.active, email], (err, res) => {
                 if (err) {
                     result(err, null);

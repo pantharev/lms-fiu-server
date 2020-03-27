@@ -137,15 +137,15 @@ exports.updateByUserEmail = (req, res) => {
             message: "Content cannot be empty!"
         });
     }
-    Student.updateByUserEmail(req.params.userId, new Student(req.body), (err, data) => {
+    Student.updateByUserEmail(req.params.userEmail, new Student(req.body), (err, data) => {
         if (err) {
             if (err.kind == "not_found") {
                 res.status(404).send({
-                    message: `Not found Student with id ${req.params.userId}.`
+                    message: `Not found Student with id ${req.params.userEmail}.`
                 });
             } else {
                 res.status(500).send({
-                    message: "Error updating Student with id " + req.params.userId
+                    message: "Error updating Student with id " + req.params.userEmail
                 });
             }
         } else {
