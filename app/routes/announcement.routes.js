@@ -5,7 +5,9 @@ module.exports = app => {
     
     app.get("/announcements", announcement.findAll);
 
-    app.get("/announcements/:courseId", announcement.findByCourseId);
+    app.get("/announcements/a/:announcementId", announcement.findById);
+
+    app.get("/announcements/c/:courseId", announcement.findByCourseId);
 
     app.put("/announcements/:announcementId", announcement.update);
 

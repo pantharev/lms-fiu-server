@@ -58,6 +58,31 @@ exports.findAll = (req, res) => {
     })
 };
 
+exports.findById = (req ,res) => {
+    const className = "Announcement";
+    const reqParamId = req.params.announcementId;
+
+    Announcement.findById(reqParamId, (err, data) => {
+        if(err) {
+            if(err.kind == "not_found"){
+                res.status(404).send({
+                    message: `Not found ${className} with id ${reqParamId}.`
+                });
+            } else {
+                res.status(500).send({
+                    message: `Error retrieving ${className} with id ${reqParamId}`
+                });
+            }
+        } else {
+            res.send(data);
+        }
+    }).then(() => {
+        console.log(`${className} findById(${reqParamId}) was found`);
+    }).catch((err) => {
+        console.log(`Error findById(${reqParamId}), couldn't find/retrieve ${className}\n${err}`);
+    })
+}
+
 // Find Announcement by courseId
 exports.findByCourseId = (req, res) => {
 
