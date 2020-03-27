@@ -132,6 +132,7 @@ exports.updateByUserId = (req, res) => {
 // Update a Student identified by the userId in the request
 exports.updateByUserEmail = (req, res) => {
     // Validate Request
+    console.log(req.params.email);
     if (!req.body) {
         req.status(400).send({
             message: "Content cannot be empty!"
