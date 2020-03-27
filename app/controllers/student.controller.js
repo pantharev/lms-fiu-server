@@ -138,14 +138,15 @@ exports.updateByUserEmail = (req, res) => {
         });
     }
     Student.updateByUserEmail(req.params.userEmail, new Student(req.body), (err, data) => {
+        res.send(req);
         if (err) {
             if (err.kind == "not_found") {
                 res.status(404).send({
-                    message: `Not found Student with id ${req.params.userEmail}.`
+                    message: `No Student found with email ${req.params.userEmail}.`
                 });
             } else {
                 res.status(500).send({
-                    message: "Error updating Student with id " + req.params.userEmail
+                    message: "Error updating Student with email " + req.params.userEmail
                 });
             }
         } else {
