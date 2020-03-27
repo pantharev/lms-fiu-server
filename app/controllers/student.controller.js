@@ -128,6 +128,31 @@ exports.updateByUserId = (req, res) => {
     });
 };
 
+
+// Update a Student identified by the userId in the request
+exports.updateByUserEmail = (req, res) => {
+    // Validate Request
+    if (!req.body) {
+        req.status(400).send({
+            message: "Content cannot be empty!"
+        });
+    }
+    Student.updateByUserEmail(req.params.userId, new Student(req.body), (err, data) => {
+        if (err) {
+            if (err.kind == "not_found") {
+                res.status(404).send({
+                    message: `Not found Student with id ${req.params.userId}.`
+                });
+            } else {
+                res.status(500).send({
+                    message: "Error updating Student with id " + req.params.userId
+                });
+            }
+        } else {
+            res.send(data);
+        }
+    });
+};
 // Delete a Student with the specified studentId in the request
 exports.delete = (req, res) => {
     Student.delete(req.params.studentId, (err, data) => {

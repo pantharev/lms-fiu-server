@@ -110,6 +110,20 @@ Student.updateByUserId = (user_id, student, result) => {
     });
 };
 
+Student.updateByUserEmail = (email, student, result) => {
+    return new Promise((resolve, reject) => {
+        sql.query("UPDATE students SET user_id = ?, f_name = ?, l_name = ?, active = ? WHERE email = ?",
+            [student.user_id, student.f_name, student.l_name, student.active, email], (err, res) => {
+                if (err) {
+                    result(err, null);
+                    return reject(err);
+                }
+                result(null, { email: email, ...student });
+                return resolve(res[0]);
+            });
+    });
+};
+
 Student.delete = (id, result) => {
     return new Promise((resolve, reject) => {
         sql.query("DELETE FROM students WHERE id = ?", id, (err, res) => {
