@@ -3,13 +3,13 @@ module.exports = app => {
 
     app.post("/student-courses", studentcourse.create);
 
-    app.get("/student-courses", studentcourse.findAll);
+    app.get("/student-courses", studentcourse.findAll); // Verified
 
-    app.get("/student-courses/s/:studentEmail", studentcourse.findOneStudent);
+    app.get("/student-courses/s/:studentEmail", studentcourse.findOneStudent); // 
 
-    app.get("/student-courses/c/:courseId", studentcourse.findOneCourse);
+    app.get("/student-courses/c/:courseId", studentcourse.findOneCourse); //
 
-    app.get("/student-courses/p/:courseId/:studentEmail", studentcourse.getAvgPts);
+    app.get("/student-courses/p/:courseId/:studentEmail", studentcourse.getAvgPts);//
 
     app.put("/student-courses/:studentEmail", studentcourse.update);
 

@@ -96,7 +96,7 @@ StudentCourse.updateByEmail = (studentEmail, studentCourse, result) => {
                     result(err, null);
                     return reject(err);
                 }
-                result(null, { student_email: student_email, ...StudentCourse });
+                result(null, { studentEmail: studentEmail, ...StudentCourse });
                 return resolve(res[0]);
             });
     });
