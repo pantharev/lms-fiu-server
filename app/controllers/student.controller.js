@@ -41,34 +41,15 @@ exports.findAll = (req, res) => {
 
 // Find a single Student with a studentId
 exports.findOne = (req, res) => {
-    Student.findById(req.params.studentId, (err, data) => {
+    Student.findByEmail(req.params.studentEmail, (err, data) => {
         if (err) {
             if (err.kind == "not_found") {
                 res.status(404).send({
-                    message: `Not found Student with id ${req.params.studentId}.`
+                    message: `Not found Student with email ${req.params.studentEmail}.`
                 });
             } else {
                 res.status(500).send({
-                    message: "Error retrieving Student with id " + req.params.studentId
-                });
-            }
-        } else {
-            res.send(data);
-        }
-    })
-};
-
-// Find a single Student with a user ID
-exports.findOne2 = (req, res) => {
-    Student.findByUserId(req.params.userId, (err, data) => {
-        if (err) {
-            if (err.kind == "not_found") {
-                res.status(404).send({
-                    message: `Not found Student with id ${req.params.userId}.`
-                });
-            } else {
-                res.status(500).send({
-                    message: "Error retrieving Student with id " + req.params.userId
+                    message: "Error retrieving Student with email " + req.params.studentEmail
                 });
             }
         } else {
