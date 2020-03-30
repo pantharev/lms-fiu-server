@@ -11,7 +11,7 @@ module.exports = app => {
 
     app.get("/student-courses/p/:courseId/:studentId", studentcourse.getAvgPts);
 
-    app.put("/student-courses/:studentId", studentcourse.update);
+    app.put("/student-courses/:studentEmail", studentcourse.update);
 
     app.delete("/student-courses/:studentId/:courseId", studentcourse.delete);
 
