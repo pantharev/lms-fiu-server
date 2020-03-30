@@ -19,7 +19,7 @@ exports.create = (req, res) => {
 
     // Save StudentCourse in the database
     StudentCourse.create(new StudentCourse(req.body), (err, data) => {
-        if(err)
+        if (err)
             res.status(500).send({
                 message: err.message || "Some error occured while creating the StudentCourse."
             });
@@ -34,7 +34,7 @@ exports.create = (req, res) => {
 // Retrieve all StudentCourses from the database.
 exports.findAll = (req, res) => {
     StudentCourse.getAll((err, data) => {
-        if(err)
+        if (err)
             res.status(500).send({
                 message: err.message || "Some error occurred while retrieving StudentCourses."
             });
@@ -45,8 +45,8 @@ exports.findAll = (req, res) => {
 // Find a single StudentCourse with a StudentCourseId
 exports.findOne = (req, res) => {
     StudentCourse.findById(req.params.StudentCourseId, (err, data) => {
-        if(err) {
-            if(err.kind == "not_found"){
+        if (err) {
+            if (err.kind == "not_found") {
                 res.status(404).send({
                     message: `Not found StudentCourse with id ${req.params.StudentCourseId}.`
                 });
@@ -63,8 +63,8 @@ exports.findOne = (req, res) => {
 
 exports.getAvgPts = (req, res) => {
     StudentCourse.getAvgPts(req.params.courseId, req.params.studentId, (err, data) => {
-        if(err) {
-            if(err.kind == "not_found"){
+        if (err) {
+            if (err.kind == "not_found") {
                 res.status(404).send({
                     message: `Not found StudentCourse with id ${req.params.studentId}.`
                 });
@@ -77,56 +77,56 @@ exports.getAvgPts = (req, res) => {
             //res.send(data);
         }
     }).then((data) => {
-        if(_.isEmpty(data)){
+        if (_.isEmpty(data)) {
             console.log("data is empty");
             res.status(404).json({ msg: "Student has no courses" })
         }
-        else{
+        else {
             //console.log("data: " + data);
             res.send(data);
         }
     }).catch((reason) => {
         console.log("err: " + reason);
-        res.status(500).json({ msg: "Error retrieving studentcourses "});
+        res.status(500).json({ msg: "Error retrieving studentcourses " });
     })
 }
 
 // Find courses the student is enrolled in
 exports.findOneStudent = (req, res) => {
-    StudentCourse.findByStudentId(req.params.studentId, (err, data) => {
-        if(err) {
-            if(err.kind == "not_found"){
+    StudentCourse.findByStudentEmail(req.params.studentEmail, (err, data) => {
+        if (err) {
+            if (err.kind == "not_found") {
                 res.status(404).send({
-                    message: `Not found StudentCourse with id ${req.params.studentId}.`
+                    message: `Not found StudentCourse with email ${req.params.studentEmail}.`
                 });
             } else {
                 res.status(500).send({
-                    message: "Error retrieving StudentCourse with id " + req.params.studentId
+                    message: "Error retrieving StudentCourse with email " + req.params.studentEmail
                 });
             }
         } else {
             //res.send(data);
         }
     }).then((data) => {
-        if(_.isEmpty(data)){
+        if (_.isEmpty(data)) {
             console.log("data is empty");
             res.status(404).json({ msg: "Student has no courses" })
         }
-        else{
+        else {
             //console.log("data: " + data);
             res.send(data);
         }
     }).catch((reason) => {
         console.log("err: " + reason);
-        res.status(500).json({ msg: "Error retrieving studentcourses "});
+        res.status(500).json({ msg: "Error retrieving studentcourses " });
     })
 };
 
 // Find all students in a course
 exports.findOneCourse = (req, res) => {
     StudentCourse.findByCourseId(req.params.courseId, (err, data) => {
-        if(err) {
-            if(err.kind == "not_found"){
+        if (err) {
+            if (err.kind == "not_found") {
                 res.status(404).send({
                     message: `Not found StudentCourse with id ${req.params.courseId}.`
                 });
@@ -141,24 +141,24 @@ exports.findOneCourse = (req, res) => {
     })
 };
 
-// Update a StudentCourse identified by the StudentCourseId in the request
+// Update a StudentCourse identified by the StudentCourseEmail in the request
 exports.update = (req, res) => {
     // Validate Request
-    if(!req.body) {
+    if (!req.body) {
         req.status(400).send({
             message: "Content cannot be empty!"
         });
     }
 
-    StudentCourse.updateById(req.params.studentId, new StudentCourse(req.body), (err, data) => {
-        if(err) {
-            if(err.kind == "not_found") {
+    StudentCourse.updateByEmail(req.params.studentEmail, new StudentCourse(req.body), (err, data) => {
+        if (err) {
+            if (err.kind == "not_found") {
                 res.status(404).send({
-                    message: `Not found StudentCourse with id ${req.params.studentId}.`
+                    message: `Not found StudentCourse with email ${req.params.studentEmail}.`
                 });
             } else {
                 res.status(500).send({
-                    message: "Error updating StudentCourse with id " + req.params.studentId
+                    message: "Error updating StudentCourse with email " + req.params.studentEmail
                 });
             }
         } else {
@@ -167,38 +167,38 @@ exports.update = (req, res) => {
     });
 };
 
-// Delete a StudentCourse with the specified StudentCourseId in the request
+// Delete a StudentCourse with the specified StudentCourseEmail in the request
 exports.delete = (req, res) => {
-    StudentCourse.delete(req.params.studentId, req.params.courseId, (err, data) => {
-        if(err) {
-            if(err.kind == "not_found") {
+    StudentCourse.delete(req.params.studentEmail, req.params.courseId, (err, data) => {
+        if (err) {
+            if (err.kind == "not_found") {
                 res.status(404).send({
-                    message: `Not found StudentCourse with id ${req.params.studentId}.`
+                    message: `Not found StudentCourse with email ${req.params.studentId}.`
                 });
             } else {
                 res.status(500).send({
-                    message: "Could not delete StudentCourse with studentId " + req.params.studentId + " courseId " + req.params.courseId
+                    message: "Could not delete StudentCourse with studentEmail " + req.params.studentEmail + " courseId " + req.params.courseId
                 });
             }
         } else {
-            res.send({ message: `StudentCourse was deleted successfully!`});
+            res.send({ message: `StudentCourse was deleted successfully!` });
         }
     }).then(() => {
-        console.log(`students_courses delete(${req.params.studentId}, ${req.params.courseId}) Promise resolved`);
+        console.log(`students_courses delete(${req.params.studentEmail}, ${req.params.courseId}) Promise resolved`);
     }).catch((err) => {
-        console.log(`students_courses delete(${req.params.studentId}, ${req.params.courseId}) Promise Rejected \n${err}`);
+        console.log(`students_courses delete(${req.params.studentEmail}, ${req.params.courseId}) Promise Rejected \n${err}`);
     });
 };
 
 // Delete all StudentCourses from the database
 exports.deleteAll = (req, res) => {
     StudentCourse.deleteAll((err, data) => {
-        if(err)
+        if (err)
             res.status(500).send({
                 message: err.message || "Some error occurred while removing all StudentCourses."
             });
         else
-            res.send({ message: "All StudentCourses were deleted successfully!"});
+            res.send({ message: "All StudentCourses were deleted successfully!" });
     });
 };
 

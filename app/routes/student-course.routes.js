@@ -5,15 +5,15 @@ module.exports = app => {
 
     app.get("/student-courses", studentcourse.findAll);
 
-    app.get("/student-courses/s/:studentId", studentcourse.findOneStudent);
+    app.get("/student-courses/s/:studentEmail", studentcourse.findOneStudent);
 
     app.get("/student-courses/c/:courseId", studentcourse.findOneCourse);
 
-    app.get("/student-courses/p/:courseId/:studentId", studentcourse.getAvgPts);
+    app.get("/student-courses/p/:courseId/:studentEmail", studentcourse.getAvgPts);
 
     app.put("/student-courses/:studentEmail", studentcourse.update);
 
-    app.delete("/student-courses/:studentId/:courseId", studentcourse.delete);
+    app.delete("/student-courses/:studentEmail/:courseId", studentcourse.delete);
 
     app.delete("/student-courses", studentcourse.deleteAll); 
 };
