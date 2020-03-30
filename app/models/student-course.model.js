@@ -37,7 +37,7 @@ StudentCourse.findById = (studentCourseId, result) => {
 // Display all courses the student is enrolled in
 StudentCourse.findByStudentEmail = (studentEmail, result) => {
     return new Promise((resolve, reject) => {
-        sql.query("SELECT * FROM studentsincourses WHERE student_email = ?", [studentEmail], (err, res) => {
+        sql.query("SELECT * FROM studentsincourses WHERE email = ?", [studentEmail], (err, res) => {
             if (err) {
                 result(err, null);
                 return reject(err);
@@ -77,7 +77,7 @@ StudentCourse.getAll = result => {
 
 StudentCourse.getAvgPts = (courseId, studentEmail, result) => {
     return new Promise((resolve, reject) => {
-        sql.query("SELECT AVG(points) as average FROM studentsincourses WHERE course_id = ? and student_email != ?", [courseId, studentEmail], (err, res) => {
+        sql.query("SELECT AVG(points) as average FROM studentsincourses WHERE course_id = ? and email != ?", [courseId, studentEmail], (err, res) => {
             if (err) {
                 result(err, null);
                 return reject(err);
