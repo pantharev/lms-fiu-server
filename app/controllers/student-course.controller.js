@@ -62,15 +62,15 @@ exports.findOne = (req, res) => {
 };
 
 exports.getAvgPts = (req, res) => {
-    StudentCourse.getAvgPts(req.params.courseId, req.params.studentId, (err, data) => {
+    StudentCourse.getAvgPts(req.params.courseId, req.params.studentEmail, (err, data) => {
         if (err) {
             if (err.kind == "not_found") {
                 res.status(404).send({
-                    message: `Not found StudentCourse with id ${req.params.studentId}.`
+                    message: `Not found StudentCourse with email ${req.params.studentEmail}.`
                 });
             } else {
                 res.status(500).send({
-                    message: "Error retrieving StudentCourse with id " + req.params.studentId
+                    message: "Error retrieving StudentCourse with email " + req.params.studentEmail
                 });
             }
         } else {
