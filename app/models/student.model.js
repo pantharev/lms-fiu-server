@@ -49,8 +49,8 @@ Student.findById2 = (studentId) => {
 */
 Student.findByEmail = (studentEmail, result) => {
     return new Promise((resolve, reject) => {
-        sql.query("CALL selectStudentByEmail(?)", [studentEmail], (err, res) => {
-        //sql.query("SELECT * FROM students WHERE email = ?", [studentEmail], (err, res) => {
+        //sql.query("CALL selectStudentByEmail(?)", [studentEmail], (err, res) => {
+        sql.query("SELECT * FROM students WHERE email = ?", [studentEmail], (err, res) => {
             if (err) {
                 return reject(err);
             }
