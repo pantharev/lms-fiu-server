@@ -87,8 +87,8 @@ Student.getAll = result => {
 
 Student.updateById = (id, student, result) => {
     return new Promise((resolve, reject) => {
-        sql.query("UPDATE students SET email = ?, f_name = ?, l_name = ?, active = ? WHERE id = ?",
-            [student.email, student.f_name, student.l_name, student.active, id], (err, res) => {
+        sql.query("UPDATE students SET email = ?, f_name = ?, l_name = ?, active = ?, role = ? WHERE id = ?",
+            [student.email, student.f_name, student.l_name, student.active, student.role, id], (err, res) => {
                 if (err) {
                     result(err, null);
                     return reject(err);
@@ -101,7 +101,7 @@ Student.updateById = (id, student, result) => {
 
 Student.updateByUserId = (user_id, student, result) => {
     return new Promise((resolve, reject) => {
-        sql.query("UPDATE students SET email = ?, f_name = ?, l_name = ?, active = ? WHERE user_id = ?",
+        sql.query("UPDATE students SET email = ?, f_name = ?, l_name = ?, active = ?, role = ? WHERE user_id = ?",
             [student.email, student.f_name, student.l_name, student.active, user_id], (err, res) => {
                 if (err) {
                     result(err, null);
