@@ -2,7 +2,7 @@ const sql = require("./db");
 
 // constructor
 const StudentCourse = function (studentCourse) {
-    this.student_email = studentCourse.student_email;
+    this.student_id = studentCourse.student_id;
     this.course_id = studentCourse.course_id;
     this.enrollment_status = studentCourse.enrollment_status;
     this.points = studentCourse.points;
@@ -13,10 +13,10 @@ StudentCourse.create = (newStudentCourse, result) => {
         sql.query("INSERT INTO students_courses SET ?", newStudentCourse, (err, res) => {
             if (err) {
                 result(err, null);
-                return reject(err);
+                reject(err);
             }
-            result(null, { email: res.email, ...newStudentCourse });
-            return resolve(res[0]);
+            result(null, { id: res.id, ...newStudentCourse });
+            resolve(newStudentCourse);
         });
     });
 };
@@ -35,9 +35,9 @@ StudentCourse.findById = (studentCourseId, result) => {
 };
 
 // Display all courses the student is enrolled in
-StudentCourse.findByStudentEmail = (studentEmail, result) => {
+StudentCourse.findByStudentId = (studentId, result) => {
     return new Promise((resolve, reject) => {
-        sql.query("SELECT * FROM studentsincourses WHERE email = ?", [studentEmail], (err, res) => {
+        sql.query("SELECT * FROM studentsincourses WHERE student_id = ?", [studentId], (err, res) => {
             if (err) {
                 result(err, null);
                 return reject(err);
@@ -75,9 +75,9 @@ StudentCourse.getAll = result => {
     });
 };
 
-StudentCourse.getAvgPts = (courseId, studentEmail, result) => {
+StudentCourse.getAvgPts = (courseId, studentId, result) => {
     return new Promise((resolve, reject) => {
-        sql.query("SELECT AVG(points) as average FROM studentsincourses WHERE course_id = ? and email != ?", [courseId, studentEmail], (err, res) => {
+        sql.query("SELECT AVG(points) as average FROM studentsincourses WHERE course_id = ? and student_id != ?", [courseId, studentId], (err, res) => {
             if (err) {
                 result(err, null);
                 return reject(err);
@@ -88,23 +88,23 @@ StudentCourse.getAvgPts = (courseId, studentEmail, result) => {
     })
 }
 
-StudentCourse.updateByEmail = (studentEmail, studentCourse, result) => {
+StudentCourse.updateById = (studentId, studentCourse, result) => {
     return new Promise((resolve, reject) => {
-        sql.query("UPDATE students_courses SET enrollment_status = ? WHERE student_email = ? AND course_id = ?",
-            [studentCourse.enrollment_status, studentEmail, studentCourse.course_id], (err, res) => {
+        sql.query("UPDATE students_courses SET enrollment_status = ? WHERE student_id = ? AND course_id = ?",
+            [studentCourse.enrollment_status, studentId, studentCourse.course_id], (err, res) => {
                 if (err) {
                     result(err, null);
                     return reject(err);
                 }
-                result(null, { studentEmail: studentEmail, ...StudentCourse });
+                result(null, { studentId: studentId, ...studentCourse });
                 return resolve(res[0]);
             });
     });
 };
 
-StudentCourse.delete = (studentEmail, courseId, result) => {
+StudentCourse.delete = (studentId, courseId, result) => {
     return new Promise((resolve, reject) => {
-        sql.query("DELETE FROM students_courses WHERE student_email = ? AND course_id = ?", [studentEmail, courseId], (err, res) => {
+        sql.query("DELETE FROM students_courses WHERE student_id = ? AND course_id = ?", [studentId, courseId], (err, res) => {
             if (err) {
                 result(err, null);
                 return reject(err);
