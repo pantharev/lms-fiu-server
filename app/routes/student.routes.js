@@ -5,6 +5,8 @@ module.exports = app => {
 
     app.get("/students", students.findAll);
 
+    app.get("/students/i", students.findAllInstructors);
+
     app.get("/students/:studentEmail", students.findOne);
 
     //app.get("/students/:userId", students.findOne2);
