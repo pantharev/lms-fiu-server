@@ -52,10 +52,10 @@ Student.findByEmail = (studentEmail, result) => {
         sql.query("CALL selectStudentByEmail(?)", [studentEmail], (err, res) => {
         //sql.query("SELECT * FROM students WHERE email = ?", [studentEmail], (err, res) => {
             if (err) {
-                return reject(err);
+                reject(err);
             }
             result(null, res[0]);
-            return resolve(res[0]);
+            resolve(res[0]);
         });
     });
 }
