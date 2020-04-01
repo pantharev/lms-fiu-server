@@ -53,7 +53,7 @@ exports.findAllInstructors = (req, res) => {
 // Find a single Student with a studentId
 exports.findOne = (req, res) => {
     Student.findByEmail(req.params.studentEmail, (err, data) => {
-        if (err) {
+        /*if (err) {
             if (err.kind == "not_found") {
                 res.status(404).send({
                     message: `Not found Student with email ${req.params.studentEmail}.`
@@ -64,13 +64,18 @@ exports.findOne = (req, res) => {
                 });
             }
         } else {
-            res.send(data);
-        }
-    }).then((value) => {
-        console.log("Promise resolved! found student by email: " + value);
+            //res.send(data);
+        }*/
+    }).then((data) => {
+        console.log("Promise resolved! found student by email: ");
+        console.log(data);
+        res.send(data);
+        res.end();
     }).catch((reason) => {
         console.log("Promise Rejected for find student by email: ");
-        console.log(reason);
+        console.log(reason.sqlMessage);
+        res.status(500).send({ message: reason.sqlMessage });
+        res.end();
     })
 };
 

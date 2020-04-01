@@ -51,17 +51,17 @@ Student.findById2 = (studentId) => {
 Student.findByEmail = (studentEmail, result) => {
     return new Promise((resolve, reject) => {
         sql.query("CALL selectStudentByEmail(?)", [studentEmail], (err, res) => {
-        //sql.query("SELECT * FROM students WHERE email = ?", [studentEmail], (err, res) => {
             if (err) {
-                reject(err);
+                result(err, null);
+                return reject(err);
             }
-            result(null, res[0]);
-            resolve(res[0]);
+            result(null, res[0][0]);
+            return resolve(res[0][0]);
         });
     });
 }
 
-Student.findByUserId = (userId) => {
+Student.findByUserId = (userId, result) => {
     return new Promise((resolve, reject) => {
         sql.query("CALL selectStudentByUserId(?)", [userId], (err, res) => {
             if (err) {
