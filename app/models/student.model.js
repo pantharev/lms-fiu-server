@@ -8,6 +8,7 @@ const Student = function (student) {
     this.active = student.active;
     this.user_id = student.user_id;
     this.password = student.password;
+    this.role = student.role;
 };
 
 Student.create = (newStudent, result) => {
@@ -166,5 +167,4 @@ Student.deleteAll = result => {
         });
     });
 };
-
 module.exports = Student;
