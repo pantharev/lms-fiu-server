@@ -19,7 +19,7 @@ Student.create = (newStudent, result) => {
                 return reject(err);
             }
             result(null, { id: res.insertId, ...newStudent });
-            return resolve(res[0]);
+            return resolve({ id: res.insertId, ...newStudent });
         });
     });
 };

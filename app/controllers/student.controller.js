@@ -24,6 +24,7 @@ exports.create = (req, res) => {
         
     }).then((data) => {
         console.log("Promise Resolved, student created!");
+        console.log(data);
         res.send(data);
         res.end();
     }).catch((reason) => {
