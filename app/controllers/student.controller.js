@@ -15,16 +15,22 @@ exports.create = (req, res) => {
         f_name: req.body.f_name,
         l_name: req.body.l_name,
         user_id: req.body.user_id,
-        active: req.body.active
+        active: req.body.active,
+        role: req.body.role
     });
 
     // Save student in the database
     Student.create(student, (err, data) => {
-        if (err)
-            res.status(500).send({
-                message: err.message || "Some error occured while creating the Student."
-            });
-        else res.send(data);
+        
+    }).then((data) => {
+        console.log("Promise Resolved, student created!");
+        res.send(data);
+        res.end();
+    }).catch((reason) => {
+        console.log("Promise Rejected, student couldn't be created");
+        console.log(reason);
+        res.status(500).send({ message: reason });
+        res.end();
     });
 };
 
@@ -53,19 +59,7 @@ exports.findAllInstructors = (req, res) => {
 // Find a single Student with a studentId
 exports.findOne = (req, res) => {
     Student.findByEmail(req.params.studentEmail, (err, data) => {
-        /*if (err) {
-            if (err.kind == "not_found") {
-                res.status(404).send({
-                    message: `Not found Student with email ${req.params.studentEmail}.`
-                });
-            } else {
-                res.status(500).send({
-                    message: "Error retrieving Student with email " + req.params.studentEmail
-                });
-            }
-        } else {
-            //res.send(data);
-        }*/
+
     }).then((data) => {
         console.log("Promise resolved! found student by email: ");
         console.log(data);
