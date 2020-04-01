@@ -66,6 +66,11 @@ exports.findOne = (req, res) => {
         } else {
             res.send(data);
         }
+    }).then((value) => {
+        console.log("Promise resolved! found student by email: " + value);
+    }).catch((reason) => {
+        console.log("Promise Rejected for find student by email: ");
+        console.log(reason);
     })
 };
 
