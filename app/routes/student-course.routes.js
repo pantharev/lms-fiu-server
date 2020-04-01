@@ -5,6 +5,8 @@ module.exports = app => {
 
     app.get("/student-courses", studentcourse.findAll);
 
+    app.get("/student-courses/i/:courseId", studentcourse.findInstructor);
+
     app.get("/student-courses/s/:studentId", studentcourse.findOneStudent);
 
     app.get("/student-courses/c/:courseId", studentcourse.findOneCourse);

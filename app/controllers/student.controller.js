@@ -39,6 +39,17 @@ exports.findAll = (req, res) => {
     })
 };
 
+// Retrieve all Students from the database.
+exports.findAllInstructors = (req, res) => {
+    Student.getAllInstructors((err, data) => {
+        if (err)
+            res.status(500).send({
+                message: err.message || "Some error occurred while retrieving Students."
+            });
+        else res.send(data);
+    })
+};
+
 // Find a single Student with a studentId
 exports.findOne = (req, res) => {
     Student.findByEmail(req.params.studentEmail, (err, data) => {

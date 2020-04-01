@@ -62,6 +62,19 @@ StudentCourse.findByCourseId = (courseId, result) => {
     });
 }
 
+StudentCourse.findInstructorByCourseId = (courseId, result) => {
+    return new Promise((resolve, reject) => {
+        sql.query("SELECT * FROM studentsincourses WHERE course_id = ? and role = 'instructor'", [courseId], (err, res) => {
+            if (err) {
+                result(err, null);
+                return reject(err);
+            }
+            result(null, res[0]);
+            return resolve(res[0]);
+        });
+    });
+}
+
 StudentCourse.getAll = result => {
     return new Promise((resolve, reject) => {
         sql.query("SELECT * FROM studentsincourses", (err, res) => {

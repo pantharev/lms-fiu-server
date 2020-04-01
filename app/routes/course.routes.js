@@ -1,18 +1,18 @@
 module.exports = app => {
     const courses = require("../controllers/course.controller");
-    const passport = require('passport');
+    //const passport = require('passport');
 
-    app.post("/courses", passport.authenticate('jwt', { session: false }), courses.create);
+    app.post("/courses", courses.create);
 
     app.get("/courses", courses.findAll);
 
     app.get("/courses/:courseId", courses.findOne);
 
-    app.put("/courses/:courseId", passport.authenticate('jwt', { session: false }), courses.update);
+    app.put("/courses/:courseId", courses.update);
 
-    app.put("/courses/s/:courseId", passport.authenticate('jwt', { session: false }), courses.updateSeats);
+    app.put("/courses/s/:courseId", courses.updateSeats);
 
-    app.delete("/courses/:courseId", passport.authenticate('jwt', { session: false }), courses.delete);
+    app.delete("/courses/:courseId", courses.delete);
 
-    app.delete("/courses", passport.authenticate('jwt', { session: false }), courses.deleteAll); 
+    app.delete("/courses", courses.deleteAll); 
 };

@@ -10,6 +10,8 @@ exports.create = (req, res) => {
         });
     }
 
+    console.log(req.body);
+
     // Create a StudentCourse
     const studentCourse = new StudentCourse({
         student_id: req.body.student_id,
@@ -35,6 +37,18 @@ exports.create = (req, res) => {
 // Retrieve all StudentCourses from the database.
 exports.findAll = (req, res) => {
     StudentCourse.getAll((err, data) => {
+        if (err)
+            res.status(500).send({
+                message: err.message || "Some error occurred while retrieving StudentCourses."
+            });
+        else res.send(data);
+    })
+};
+
+// Retrieve all StudentCourses from the database.
+exports.findInstructor = (req, res) => {
+    let courseId = req.params.courseId;
+    StudentCourse.findInstructorByCourseId(courseId, (err, data) => {
         if (err)
             res.status(500).send({
                 message: err.message || "Some error occurred while retrieving StudentCourses."

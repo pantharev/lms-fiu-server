@@ -85,6 +85,19 @@ Student.getAll = result => {
     });
 };
 
+Student.getAllInstructors = result => {
+    return new Promise((resolve, reject) => {
+        sql.query("SELECT id, email, f_name, l_name, role FROM students WHERE role = 'instructor'", (err, res) => {
+            if (err) {
+                result(err, null);
+                return reject(err);
+            }
+            result(null, res);
+            return resolve(res);
+        });
+    });
+}
+
 Student.updateById = (id, student, result) => {
     return new Promise((resolve, reject) => {
         sql.query("UPDATE students SET email = ?, f_name = ?, l_name = ?, active = ?, role = ? WHERE id = ?",
