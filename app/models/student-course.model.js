@@ -115,6 +115,20 @@ StudentCourse.updateById = (studentId, studentCourse, result) => {
     });
 };
 
+StudentCourse.updateScore = (studentCourse, result) => {
+    return new Promise((resolve, reject) => {
+        sql.query("UPDATE students_courses SET points = points + ? WHERE student_id = ? AND course_id = ?",
+            [studentCourse.points, studentCourse.student_id, studentCourse.course_id], (err, res) => {
+                if (err) {
+                    result(err, null);
+                    return reject(err);
+                }
+                result(null, studentCourse);
+                return resolve(studentCourse);
+            });
+    });
+};
+
 StudentCourse.delete = (studentId, courseId, result) => {
     return new Promise((resolve, reject) => {
         sql.query("DELETE FROM students_courses WHERE student_id = ? AND course_id = ?", [studentId, courseId], (err, res) => {

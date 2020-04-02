@@ -182,6 +182,41 @@ exports.update = (req, res) => {
     });
 };
 
+// Update a StudentCourse identified by the StudentId in the request
+exports.updateScore = (req, res) => {
+
+    // Validate Request
+    if (!req.body) {
+        req.status(400).send({
+            message: "Content cannot be empty!"
+        });
+    }
+
+    StudentCourse.updateScore(new StudentCourse(req.body), (err, data) => {
+        /*if (err) {
+            if (err.kind == "not_found") {
+                res.status(404).send({
+                    message: `Not found StudentCourse with id ${req.params.studentId}.`
+                });
+            } else {
+                res.status(500).send({
+                    message: "Error updating StudentCourse with id " + req.params.studentId
+                });
+            }
+        } else {
+            res.send(data);
+        }*/
+    }).then((data) => {
+        console.log("updated student points");
+        res.send(data);
+        res.end();
+    }).catch((reason) => {
+        console.log("couldn't update student points");
+        res.status(500).send({ message: "error while updating points for student", sqlError: reason.sqlError });
+        res.end();
+    });
+};
+
 // Delete a StudentCourse with the specified StudentCourseEmail in the request
 exports.delete = (req, res) => {
     StudentCourse.delete(req.params.studentId, req.params.courseId, (err, data) => {
