@@ -89,7 +89,7 @@ Student.getAll = (req, result) => {
                 numPages = Math.ceil(numRows / numPerPage);
                 console.log('number of pages: ', numPages);
             });
-            connection.query("SELECT * FROM students ORDER BY l_name ASC LIMIT ? , ?", [skip, numPerPage], (err, res) => {
+            connection.query("SELECT * FROM students ORDER BY role ASC LIMIT ? , ?", [skip, numPerPage], (err, res) => {
                 if (err) {
                     result(err, null);
                     return reject(err);
