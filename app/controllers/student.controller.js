@@ -37,12 +37,16 @@ exports.create = (req, res) => {
 
 // Retrieve all Students from the database.
 exports.findAll = (req, res) => {
-    Student.getAll((err, data) => {
-        if (err)
+    Student.getAll(req, (err, data) => {
+        if(err)
             res.status(500).send({
-                message: err.message || "Some error occurred while retrieving Students."
+                message: err.message || "Some error occurred while retrieving students."
             });
         else res.send(data);
+    }).then(() => {
+        console.log('Found all students successfully');
+    }).catch((err) => {
+        console.log(`Error retrieving the students\n${err}`);
     })
 };
 
