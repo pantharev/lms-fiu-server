@@ -73,7 +73,7 @@ Student.findByUserId = (userId, result) => {
     });
 }
 
-Student.getAll = result => {
+Student.getAll = (req, result) => {
     return new Promise((resolve, reject) => {
         const conn = sql.getConnection((err, connection) => {
             let numRows;
@@ -89,7 +89,7 @@ Student.getAll = result => {
                 numPages = Math.ceil(numRows / numPerPage);
                 console.log('number of pages: ', numPages);
             });
-            connection.query("SELECT * FROM students ORDER BY name ASC LIMIT ? , ?", [skip, numPerPage], (err, res) => {
+            connection.query("SELECT * FROM students ORDER BY l_name ASC LIMIT ? , ?", [skip, numPerPage], (err, res) => {
                 if (err) {
                     result(err, null);
                     return reject(err);

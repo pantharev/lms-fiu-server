@@ -87,15 +87,15 @@ exports.update = (req, res) => {
         });
     }
 
-    Student.updateById(req.params.id, new Student(req.body), (err, data) => {
+    Student.updateById(req.body.id, new Student(req.body), (err, data) => {
         if (err) {
             if (err.kind == "not_found") {
                 res.status(404).send({
-                    message: `Not found Student with id ${req.params.id}.`
+                    message: `Not found Student with id ${req.body.id}.`
                 });
             } else {
                 res.status(500).send({
-                    message: "Error updating Student with id " + req.params.id
+                    message: "Error updating Student with id " + req.body.id
                 });
             }
         } else {
