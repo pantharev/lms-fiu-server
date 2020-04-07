@@ -30,8 +30,8 @@ const allowUrl = ['courses', 'modules'];
 
 const nodemailer = require("nodemailer");
 
-const sendMail = (user, callback) => {
-    console.log("in sendMail function: ", user);
+const sendMail = (studentCourse, callback) => {
+    console.log("in sendMail function: ", studentCourse);
     const transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
         port: 587,
@@ -44,9 +44,10 @@ const sendMail = (user, callback) => {
 
     const mailOptions = {
         from: `"FIU LMS", "no-reply-fiu-lms@fiu.edu"`,
-        to: `<jwats057@fiu.edu>`,
-        subject: "LMS TEST",
-        html: "You are now enrolled"
+        to: studentCourse.student.email,
+        subject: "LMS TEST - Enrollment",
+        html: "Hi " + studentCourse.student.f_name + " " + studentCourse.student.l_name + ",<br /><br />" + 
+        "You have been accepted into the course " + studentCourse.course.name + "!"
     };
     transporter.sendMail(mailOptions, callback);
 }
@@ -100,8 +101,7 @@ app.get("/", (req, res) => {
 
 app.post("/sendmail", (req, res) => {
     console.log("server.js request came");
-    let user = req.body;
-    sendMail(user, (err, info) => {
+    sendMail(req.body, (err, info) => {
         if (err) {
             console.log(err);
             res.status(500);
