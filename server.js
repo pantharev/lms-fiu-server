@@ -28,6 +28,30 @@ const port = process.env.PORT || 3000;
 
 const allowUrl = ['courses', 'modules'];
 
+const nodemailer = require("nodemailer");
+const sendMail = (user, callback) => {
+    console.log("in sendMail function");
+    const transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false, // true for 465, false for other ports
+        auth: {
+            user: 'lmsfiustudent@gmail.com', 
+            pass: 'lms@student@fiu' 
+        }
+    });
+
+    const mailOptions = {
+        from: `"FIU LMS", "no-reply-fiu-lms@fiu.edu"`,
+        to: `<jwats057@fiu.edu>`,
+        subject: "LMS TEST",
+        html: "You are now enrolled"
+    };
+    transporter.sendMail(mailOptions, callback);
+}
+
+
+
 app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -143,6 +167,22 @@ require("./app/routes/video.routes.js")(app);
 require("./app/routes/pdf.routes.js")(app, upload);
 require("./app/routes/survey.routes.js")(app);
 
+
+app.post("/sendmail", (req, res) => {
+    console.log("server.js request came");
+    let user = req.body;
+    sendMail(user, (err, info) => {
+        if (err) {
+            console.log(err);
+            res.status(400);
+            res.send({ error: "Failed to send email" });
+        } else {
+            console.log("Email has been sent");
+            res.send(info);
+        }
+    });
+});
+
 // [SH] Catch unauthorised errors
 app.use(function (err, req, res, next) {
     if (err.name === 'UnauthorizedError') {
@@ -151,6 +191,7 @@ app.use(function (err, req, res, next) {
     }
 });
 
+<<<<<<< Updated upstream
 /* Facebook tab request handling */
 
 
@@ -159,6 +200,8 @@ app.post('/', function (req, res) {
 });
 
 
+=======
+>>>>>>> Stashed changes
 http.listen(port, () => {
     console.log("http Server is running on port: " + port);
 })

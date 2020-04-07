@@ -40,9 +40,56 @@ exports.findAll = (req, res) => {
 
 // Find a single Student with a studentId
 exports.findOne = (req, res) => {
+<<<<<<< Updated upstream
     Student.findById(req.params.studentId, (err, data) => {
         if(err) {
             if(err.kind == "not_found"){
+=======
+    Student.findById(req.params.id, (err, data) => {
+
+    }).then((data) => {
+        console.log("Promise resolved! found student by ID: ");
+        console.log(data);
+        res.send(data);
+        res.end();
+    }).catch((reason) => {
+        console.log("Promise Rejected for find student by ID: ");
+        console.log(reason.sqlMessage);
+        res.status(500).send({ message: reason.sqlMessage });
+        res.end();
+    })
+};
+
+// Find a single Student with an email
+exports.findOne2 = (req, res) => {
+    Student.findByEmail(req.params.email, (err, data) => {
+
+    }).then((data) => {
+        console.log("Promise resolved! found student by email: ");
+        console.log(data);
+        res.send(data);
+        res.end();
+    }).catch((reason) => {
+        console.log("Promise Rejected for find student by email: ");
+        console.log(reason.sqlMessage);
+        res.status(500).send({ message: reason.sqlMessage });
+        res.end();
+    })
+};
+
+// Update a Student identified by the studentId in the request
+exports.update = (req, res) => {
+    // Validate Request
+    if (!req.body) {
+        req.status(400).send({
+            message: "Content cannot be empty!"
+        });
+    }
+
+    Student.updateById(req.body.id, new Student(req.body), (err, data) => {
+        if (err) {
+            if (err.kind == "not_found") {
+>>>>>>> Stashed changes
                 res.status(404).send({
                     message: `Not found Student with id ${req.params.studentId}.`
                 });
