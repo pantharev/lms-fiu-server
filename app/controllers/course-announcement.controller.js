@@ -1,5 +1,6 @@
-const Module = require("../models/module.model");
+const CourseAnnouncement = require("../models/course-announcement.model");
 
+// Create and Save a new CourseAnnouncement
 exports.create = (req, res) => {
     // Validate request
     if (!req.body) {
@@ -7,29 +8,60 @@ exports.create = (req, res) => {
             message: "Content cannot be empty!"
         });
     }
-    
-    const moduleO = new Module({
-        number: req.body.number,
-        title: req.body.title,
-        lockedUntil: req.body.lockedUntil
+
+    // Create a CourseAnnouncement
+    const courseAnnouncement = new CourseAnnouncement({
+        course_id: req.body.course_id,
+        announcement_id: req.body.announcement_id
     });
 
-    Module.create(req.params.courseId, moduleO, (err, data) => {
+    // Save CourseAnnouncement in the database
+    CourseAnnouncement.create(courseAnnouncement, (err, data) => {
         if(err)
-        res.status(500).send({
-            message: err.message || "Some error occured while creating the Student."
-        });
+            res.status(500).send({
+                message: err.message || "Some error occured while creating the CourseAnnouncement."
+            });
         else res.send(data);
+    }).then(() => {
+        console.log('Created CourseAnnouncement successfully!');
+    }).catch((err) => {
+        console.log(`Error creating the CourseAnnouncement\n${err}`);
+    });
+};
+
+// Find CourseAnnouncements in Module with a courseId
+exports.findAll = (req, res) => {
+
+    const className = "CourseAnnouncement";
+
+    CourseAnnouncement.findAll((err, data) => {
+        if(err) {
+            if(err.kind == "not_found"){
+                res.status(404).send({
+                    message: `Not found ${className}.`
+                });
+            } else {
+                res.status(500).send({
+                    message: `Error retrieving ${className}`
+                });
+            }
+        } else {
+            res.send(data);
+        }
+    }).then(() => {
+        console.log(`${className}s were found`);
+    }).catch((err) => {
+        console.log(`Error, couldn't find/retrieve ${className}s\n${err}`);
     })
-}
+};
 
-// Find a single Module with a moduleId
-exports.findOne = (req, res) => {
+// Find CourseAnnouncement by id
+exports.findById = (req, res) => {
 
-    const className = "Module";
-    const reqParamId = req.params.moduleId;
+    const className = "CourseAnnouncement";
+    const reqParamId = req.params.courseAnnouncementId;
 
-    Module.findById(reqParamId, (err, data) => {
+    CourseAnnouncement.findById(reqParamId, (err, data) => {
         if(err) {
             if(err.kind == "not_found"){
                 res.status(404).send({
@@ -46,30 +78,11 @@ exports.findOne = (req, res) => {
     }).then(() => {
         console.log(`${className} findById(${reqParamId}) was found`);
     }).catch((err) => {
-        console.log(`Error findById(${reqParamId}), couldn't find/retrieve course\n${err}`);
+        console.log(`Error findById(${reqParamId}), couldn't find/retrieve ${className}\n${err}`);
     })
 };
 
-// Find all modules in a course
-exports.findOneCourse = (req, res) => {
-    Module.findByCourseId(req.params.courseId, (err, data) => {
-        if(err) {
-            if(err.kind == "not_found"){
-                res.status(404).send({
-                    message: `Not found course with id ${req.params.courseId}.`
-                });
-            } else {
-                res.status(500).send({
-                    message: "Error retrieving course with id " + req.params.courseId
-                });
-            }
-        } else {
-            res.send(data);
-        }
-    })
-};
-
-// Update a Module identified by the moduleId in the request
+// Update a CourseAnnouncement identified by the CourseAnnouncementId in the request
 exports.update = (req, res) => {
     // Validate Request
     if(!req.body) {
@@ -78,10 +91,10 @@ exports.update = (req, res) => {
         });
     }
 
-    const className = "Module";
-    const reqParamID = req.params.moduleId;
+    const className = "CourseAnnouncement";
+    const reqParamID = req.params.courseAnnouncementId;
 
-    Module.updateById(reqParamID, new Module(req.body), (err, data) => {
+    CourseAnnouncement.updateById(reqParamID, new CourseAnnouncement(req.body), (err, data) => {
         if(err) {
             if(err.kind == "not_found") {
                 res.status(404).send({
@@ -102,11 +115,12 @@ exports.update = (req, res) => {
     });
 };
 
-// Delete a Module with the specified moduleId in the request
+// Delete a CourseAnnouncement with the specified CourseAnnouncementId in the request
 exports.delete = (req, res) => {
-    const className = "Module";
-    const reqParamID = req.params.moduleId;
-    Module.delete(reqParamID, (err, data) => {
+    const className = "CourseAnnouncement";
+    const reqParamID = req.params.courseAnnouncementId;
+    
+    CourseAnnouncement.delete(reqParamID, (err, data) => {
         if(err) {
             if(err.kind == "not_found") {
                 res.status(404).send({

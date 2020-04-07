@@ -93,13 +93,6 @@ const profileRoutes = require('./app/routes/profile-routes');
 app.use('/auth', authRoutes);
 app.use('/profile', profileRoutes);
 
-/*app.all(() => {
-res.header('Access-Control-Allow-Origin', '*'); // your website
-//res.header('Access-Control-Allow-Credentials', 'false');
-res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-res.header('Access-Control-Allow-Headers', 'accept, Content-Type, Authorization, Content-Length, X-Requested-With')
-})*/
-
 app.get("/", (req, res) => {
     res.send('Hello World4');
 });
@@ -166,6 +159,11 @@ require("./app/routes/module.routes.js")(app);
 require("./app/routes/video.routes.js")(app);
 require("./app/routes/pdf.routes.js")(app, upload);
 require("./app/routes/survey.routes.js")(app);
+require("./app/routes/course-details.routes.js")(app);
+require("./app/routes/discussion.routes.js")(app);
+require("./app/routes/global-announcement.routes.js")(app);
+require("./app/routes/course-announcement.routes.js")(app);
+require("./app/routes/announcement.routes.js")(app);
 
 
 app.post("/sendmail", (req, res) => {
@@ -191,17 +189,6 @@ app.use(function (err, req, res, next) {
     }
 });
 
-<<<<<<< Updated upstream
-/* Facebook tab request handling */
-
-
-app.post('/', function (req, res) {
-    res.send("Post request sent to backend");
-});
-
-
-=======
->>>>>>> Stashed changes
 http.listen(port, () => {
     console.log("http Server is running on port: " + port);
 })

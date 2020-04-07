@@ -1,5 +1,6 @@
-const Module = require("../models/module.model");
+const Discussion = require("../models/discussion.model");
 
+// Create and Save a new Discussion
 exports.create = (req, res) => {
     // Validate request
     if (!req.body) {
@@ -7,29 +8,38 @@ exports.create = (req, res) => {
             message: "Content cannot be empty!"
         });
     }
-    
-    const moduleO = new Module({
-        number: req.body.number,
-        title: req.body.title,
-        lockedUntil: req.body.lockedUntil
+
+    // Create a Discussion
+    const discussion = new Discussion({
+        user: req.body.user,
+        post: req.body.post,
+        created: req.body.created,
+        changed: req.body.changed,
+        module_id: req.body.module_id,
+        user_id: req.body.user_id
     });
 
-    Module.create(req.params.courseId, moduleO, (err, data) => {
+    // Save Discussion in the database
+    Discussion.create(discussion, (err, data) => {
         if(err)
-        res.status(500).send({
-            message: err.message || "Some error occured while creating the Student."
-        });
+            res.status(500).send({
+                message: err.message || "Some error occured while creating the Discussion."
+            });
         else res.send(data);
-    })
-}
+    }).then(() => {
+        console.log('Created Discussion successfully!');
+    }).catch((err) => {
+        console.log(`Error creating the Discussion\n${err}`);
+    });
+};
 
-// Find a single Module with a moduleId
-exports.findOne = (req, res) => {
+// Find Discussions in Module with a courseId
+exports.findAll = (req, res) => {
 
-    const className = "Module";
-    const reqParamId = req.params.moduleId;
+    const className = "Discussion";
+    const reqParamId = req.params.courseId;
 
-    Module.findById(reqParamId, (err, data) => {
+    Discussion.findByCourseId(reqParamId, (err, data) => {
         if(err) {
             if(err.kind == "not_found"){
                 res.status(404).send({
@@ -46,30 +56,38 @@ exports.findOne = (req, res) => {
     }).then(() => {
         console.log(`${className} findById(${reqParamId}) was found`);
     }).catch((err) => {
-        console.log(`Error findById(${reqParamId}), couldn't find/retrieve course\n${err}`);
+        console.log(`Error findById(${reqParamId}), couldn't find/retrieve ${className}\n${err}`);
     })
 };
 
-// Find all modules in a course
-exports.findOneCourse = (req, res) => {
-    Module.findByCourseId(req.params.courseId, (err, data) => {
+// Find Discussions in Module with a moduleId
+exports.findAllInModule = (req, res) => {
+
+    const className = "Discussion";
+    const reqParamId = req.params.moduleId;
+
+    Discussion.findByModuleId(reqParamId, (err, data) => {
         if(err) {
             if(err.kind == "not_found"){
                 res.status(404).send({
-                    message: `Not found course with id ${req.params.courseId}.`
+                    message: `Not found ${className} with id ${reqParamId}.`
                 });
             } else {
                 res.status(500).send({
-                    message: "Error retrieving course with id " + req.params.courseId
+                    message: `Error retrieving ${className} with id ${reqParamId}`
                 });
             }
         } else {
             res.send(data);
         }
+    }).then(() => {
+        console.log(`${className} findById(${reqParamId}) was found`);
+    }).catch((err) => {
+        console.log(`Error findById(${reqParamId}), couldn't find/retrieve ${className}\n${err}`);
     })
 };
 
-// Update a Module identified by the moduleId in the request
+// Update a Discussion identified by the DiscussionId in the request
 exports.update = (req, res) => {
     // Validate Request
     if(!req.body) {
@@ -78,10 +96,10 @@ exports.update = (req, res) => {
         });
     }
 
-    const className = "Module";
-    const reqParamID = req.params.moduleId;
+    const className = "Discussion";
+    const reqParamID = req.params.discussionId;
 
-    Module.updateById(reqParamID, new Module(req.body), (err, data) => {
+    Discussion.updateById(reqParamID, new Discussion(req.body), (err, data) => {
         if(err) {
             if(err.kind == "not_found") {
                 res.status(404).send({
@@ -102,11 +120,12 @@ exports.update = (req, res) => {
     });
 };
 
-// Delete a Module with the specified moduleId in the request
+// Delete a Discussion with the specified DiscussionId in the request
 exports.delete = (req, res) => {
-    const className = "Module";
-    const reqParamID = req.params.moduleId;
-    Module.delete(reqParamID, (err, data) => {
+    const className = "Discussion";
+    const reqParamID = req.params.discussionId;
+    
+    Discussion.delete(reqParamID, (err, data) => {
         if(err) {
             if(err.kind == "not_found") {
                 res.status(404).send({

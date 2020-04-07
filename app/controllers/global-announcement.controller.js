@@ -1,5 +1,6 @@
-const Module = require("../models/module.model");
+const GlobalAnnouncement = require("../models/global-announcement.model");
 
+// Create and Save a new GlobalAnnouncement
 exports.create = (req, res) => {
     // Validate request
     if (!req.body) {
@@ -7,29 +8,63 @@ exports.create = (req, res) => {
             message: "Content cannot be empty!"
         });
     }
-    
-    const moduleO = new Module({
-        number: req.body.number,
-        title: req.body.title,
-        lockedUntil: req.body.lockedUntil
+
+    // Create a GlobalAnnouncement
+    const globalAnnouncement = new GlobalAnnouncement({
+        user: req.body.user,
+        content: req.body.content,
+        created: req.body.created,
+        changed: req.body.changed,
+        user_id: req.body.user_id
     });
 
-    Module.create(req.params.courseId, moduleO, (err, data) => {
+    // Save GlobalAnnouncement in the database
+    GlobalAnnouncement.create(globalAnnouncement, (err, data) => {
         if(err)
-        res.status(500).send({
-            message: err.message || "Some error occured while creating the Student."
-        });
+            res.status(500).send({
+                message: err.message || "Some error occured while creating the GlobalAnnouncement."
+            });
         else res.send(data);
+    }).then(() => {
+        console.log('Created GlobalAnnouncement successfully!');
+    }).catch((err) => {
+        console.log(`Error creating the GlobalAnnouncement\n${err}`);
+    });
+};
+
+// Find GlobalAnnouncements in Module with a courseId
+exports.findAll = (req, res) => {
+
+    const className = "GlobalAnnouncement";
+
+    GlobalAnnouncement.findAll((err, data) => {
+        if(err) {
+            if(err.kind == "not_found"){
+                res.status(404).send({
+                    message: `Not found ${className}.`
+                });
+            } else {
+                res.status(500).send({
+                    message: `Error retrieving ${className}`
+                });
+            }
+        } else {
+            res.send(data);
+        }
+    }).then(() => {
+        console.log(`${className}s were found`);
+    }).catch((err) => {
+        console.log(`Error, couldn't find/retrieve ${className}s\n${err}`);
     })
-}
+};
 
-// Find a single Module with a moduleId
-exports.findOne = (req, res) => {
+// Find GlobalAnnouncement by id
+exports.findById = (req, res) => {
 
-    const className = "Module";
-    const reqParamId = req.params.moduleId;
+    const className = "GlobalAnnouncement";
+    const reqParamId = req.params.globalAnnouncementId;
 
-    Module.findById(reqParamId, (err, data) => {
+    GlobalAnnouncement.findById(reqParamId, (err, data) => {
         if(err) {
             if(err.kind == "not_found"){
                 res.status(404).send({
@@ -46,30 +81,11 @@ exports.findOne = (req, res) => {
     }).then(() => {
         console.log(`${className} findById(${reqParamId}) was found`);
     }).catch((err) => {
-        console.log(`Error findById(${reqParamId}), couldn't find/retrieve course\n${err}`);
+        console.log(`Error findById(${reqParamId}), couldn't find/retrieve ${className}\n${err}`);
     })
 };
 
-// Find all modules in a course
-exports.findOneCourse = (req, res) => {
-    Module.findByCourseId(req.params.courseId, (err, data) => {
-        if(err) {
-            if(err.kind == "not_found"){
-                res.status(404).send({
-                    message: `Not found course with id ${req.params.courseId}.`
-                });
-            } else {
-                res.status(500).send({
-                    message: "Error retrieving course with id " + req.params.courseId
-                });
-            }
-        } else {
-            res.send(data);
-        }
-    })
-};
-
-// Update a Module identified by the moduleId in the request
+// Update a GlobalAnnouncement identified by the GlobalAnnouncementId in the request
 exports.update = (req, res) => {
     // Validate Request
     if(!req.body) {
@@ -78,10 +94,10 @@ exports.update = (req, res) => {
         });
     }
 
-    const className = "Module";
-    const reqParamID = req.params.moduleId;
+    const className = "GlobalAnnouncement";
+    const reqParamID = req.params.globalAnnouncementId;
 
-    Module.updateById(reqParamID, new Module(req.body), (err, data) => {
+    GlobalAnnouncement.updateById(reqParamID, new GlobalAnnouncement(req.body), (err, data) => {
         if(err) {
             if(err.kind == "not_found") {
                 res.status(404).send({
@@ -102,11 +118,12 @@ exports.update = (req, res) => {
     });
 };
 
-// Delete a Module with the specified moduleId in the request
+// Delete a GlobalAnnouncement with the specified GlobalAnnouncementId in the request
 exports.delete = (req, res) => {
-    const className = "Module";
-    const reqParamID = req.params.moduleId;
-    Module.delete(reqParamID, (err, data) => {
+    const className = "GlobalAnnouncement";
+    const reqParamID = req.params.globalAnnouncementId;
+    
+    GlobalAnnouncement.delete(reqParamID, (err, data) => {
         if(err) {
             if(err.kind == "not_found") {
                 res.status(404).send({
