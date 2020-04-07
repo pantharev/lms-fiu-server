@@ -76,6 +76,28 @@ exports.findOne = (req, res) => {
     })
 };
 
+// Find a single StudentCourse with a StudentCourseId
+exports.findByStudentCourseId = (req, res) => {
+    let studentId = req.params.studentId;
+    let courseId = req.params.courseId;
+
+    StudentCourse.findByStudentCourseId(studentId, courseId, (err, data) => {
+        if (err) {
+            if (err.kind == "not_found") {
+                res.status(404).send({
+                    message: `Not found StudentCourse with id ${req.params.StudentCourseId}.`
+                });
+            } else {
+                res.status(500).send({
+                    message: "Error retrieving StudentCourse with id " + req.params.StudentCourseId
+                });
+            }
+        } else {
+            res.send(data);
+        }
+    })
+};
+
 exports.getAvgPts = (req, res) => {
     StudentCourse.getAvgPts(req.params.courseId, req.params.studentId, (err, data) => {
         if (err) {
