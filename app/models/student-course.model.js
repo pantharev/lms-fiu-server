@@ -21,9 +21,9 @@ StudentCourse.create = (newStudentCourse, result) => {
     });
 };
 
-StudentCourse.findById = (studentCourseId, result) => {
+StudentCourse.findByStudentCourseId = (studentId, courseId, result) => {
     return new Promise((resolve, reject) => {
-        sql.query("SELECT * FROM StudentCourses WHERE id = ?", [studentCourseId], (err, res) => {
+        sql.query("SELECT * FROM students_courses WHERE student_id = ? and course_id = ?", [studentId, courseId], (err, res) => {
             if (err) {
                 result(err, null);
                 return reject(err);
