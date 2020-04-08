@@ -26,10 +26,13 @@ StudentCourse.findByStudentCourseId = (studentId, courseId, result) => {
         sql.query("SELECT * FROM students_courses WHERE student_id = ? and course_id = ?", [studentId, courseId], (err, res) => {
             if (err) {
                 result(err, null);
-                return reject(err);
+                reject(err);
+            }
+            if(!res[0]){
+                reject(new Error("couldn't find a value"));
             }
             result(null, res[0]);
-            return resolve(res[0]);
+            resolve(res[0]);
         });
     });
 };
