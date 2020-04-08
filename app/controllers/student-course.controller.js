@@ -82,7 +82,7 @@ exports.findByStudentCourseId = (req, res) => {
     let courseId = req.params.courseId;
 
     StudentCourse.findByStudentCourseId(studentId, courseId, (err, data) => {
-        if (err) {
+        /*if (err) {
             if (err.kind == "not_found") {
                 res.status(404).send({
                     message: `Not found StudentCourse with id ${req.params.StudentCourseId}.`
@@ -94,7 +94,13 @@ exports.findByStudentCourseId = (req, res) => {
             }
         } else {
             res.send(data);
-        }
+        }*/
+    }).then((data) => {
+        res.send(data);
+        res.end();
+    }).catch((reason) => {
+        res.status(500).send({message: "Error retrieving StudentCourse with studentId " + studentId + " courseId " + courseId})
+        res.end();
     })
 };
 
