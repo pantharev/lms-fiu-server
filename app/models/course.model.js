@@ -37,7 +37,11 @@ Course.findById = (courseId, result) => {
 
 Course.getAll = (req, result) => {
     return new Promise((resolve, reject) => {
-        const conn = sql.getConnection((err, connection) => {
+        sql.getConnection((err, connection) => {
+            if(err){
+                console.error('error getting connection:' + err.stack);
+                return;
+            }
             let numRows;
             let queryPagination;
             let numPerPage = parseInt(req.query.npp, 10) || 1;
@@ -45,43 +49,59 @@ Course.getAll = (req, result) => {
             let numPages;
             let skip = page * numPerPage;
             let limit = skip + ', ' + numPerPage;
-            connection.beginTransaction();
-            connection.query("SELECT count(*) as numRows FROM courses", (err, res) => {
-                numRows = res[0].numRows;
-                numPages = Math.ceil(numRows / numPerPage);
-                console.log('number of pages: ', numPages);
-            });
-            connection.query("SELECT * FROM courses ORDER BY name ASC LIMIT ? , ?", [skip, numPerPage], (err, res) => {
-                if(err) {
-                    result(err, null);
-                    return reject(err);
-                }
-                let responsePayload = {
-                    res: res
-                };
-                if (page < numPages){
-                    responsePayload.pagination = {
-                        current: page,
-                        perPage: numPerPage,
-                        maxPages: numPages,
-                        previous: page > 0 ? page - 1 : undefined,
-                        next: page < numPages - 1 ? page + 1 : undefined
+            connection.beginTransaction((err) => {
+                if(err) { throw err; }
+
+                connection.query("SELECT count(*) as numRows FROM courses", (err, res) => {
+                    if(err){
+                        connection.rollback(() => {
+                            throw err;
+                        });
                     }
-                }
-                else responsePayload.pagination = {
-                    err: 'queried page ' + page + ' is >= to maximum page number ' + numPages
-                }
-                result(null, responsePayload);
-                return resolve(responsePayload);
+
+                    numRows = res[0].numRows;
+                    numPages = Math.ceil(numRows / numPerPage);
+                    console.log('number of pages: ', numPages);
+                
+                    connection.query("SELECT * FROM courses ORDER BY name ASC LIMIT ? , ?", [skip, numPerPage], (err, res) => {
+                        if(err) {
+                            connection.rollback(() => {
+                                throw err;
+                            });
+                            result(err, null);
+                            reject(err);
+                        }
+                        let responsePayload = {
+                            res: res
+                        };
+                        if (page < numPages){
+                            responsePayload.pagination = {
+                                current: page,
+                                perPage: numPerPage,
+                                maxPages: numPages,
+                                previous: page > 0 ? page - 1 : undefined,
+                                next: page < numPages - 1 ? page + 1 : undefined
+                            }
+                        }
+                        else responsePayload.pagination = {
+                            err: 'queried page ' + page + ' is >= to maximum page number ' + numPages
+                        }
+                        result(null, responsePayload);
+                        resolve(responsePayload);
+                            connection.commit((err) => {
+                                if(err){
+                                    connection.rollback(() => {
+                                        throw err;
+                                    });
+                                }
+                                console.log("transaction complete");
+                                connection.release();
+                            })
+                    });
+                });
+
             });
-            connection.commit();
-            connection.release();
         });
-        /*sql.query("SELECT count(*) as numRows FROM courses", (err, res) => {
-            numRows = res[0].numRows;
-            numPages = Math.ceil(numRows / numPerPage);
-            console.log('number of pages: ', numPages);
-        });*/
     });
 };
 
