@@ -85,6 +85,10 @@ io.on('connection', function (socket) {
             io.to(socket.id).emit('search-data', res);
         });
     })
+
+    socket.on('disconnect', () => {
+        console.log(`Socket ${socket.id} disconnected.`);
+    });
 })
 
 require("./app/routes/student.routes.js")(app);
