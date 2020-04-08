@@ -119,9 +119,12 @@ exports.delete = (req, res) => {
             }
         } else {
             res.send({ message: `${className} was deleted successfully!`});
+            res.end();
         }
     }).then(() => {
         console.log(`Resolved: ${className} ${reqParamID} was deleted successfully!`);
+        res.send({ message: `${className} was deleted successfully!`});
+        res.end();
     }).catch((err) => {
         if(err.kind == "not_found")
             console.log(`Rejected: Couldn't find ${className} with id ${reqParamID}\n${err}`);
