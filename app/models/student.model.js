@@ -23,10 +23,10 @@ Student.create = (newStudent, result) => {
         });
     });
 };
-/*
-Student.findById = (studentId, result) => {
+
+Student.findById = (id, result) => {
     return new Promise((resolve, reject) => {
-        sql.query("SELECT * FROM students WHERE id = ?", [studentId], (err, res) => {
+        sql.query("SELECT * FROM students WHERE id = ?", [id], (err, res) => {
             if (err) {
                 result(err, null);
                 return reject(err);
@@ -47,7 +47,7 @@ Student.findById2 = (studentId) => {
         });
     });
 };
-*/
+
 Student.findByEmail = (studentEmail, result) => {
     return new Promise((resolve, reject) => {
         sql.query("CALL selectStudentByEmail(?)", [studentEmail], (err, res) => {
