@@ -11,6 +11,7 @@
   "author": "Nicolas Arevalo, James Watson III, Alejandro Arrieta",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.656.0",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.4",
     "cookie-session": "^1.4.0",
@@ -27,7 +28,8 @@
     "passport-facebook": "^3.0.0",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
-    "socket.io": "^2.3.0"
+    "socket.io": "^2.3.0",
+    "uuid": "^7.0.3"
   },
   "devDependencies": {
     "chai": "^4.2.0",

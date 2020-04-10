@@ -3,12 +3,6 @@ const Pdf = require("../models/pdf.model");
 // Create and Save a new Pdf
 exports.create = (req, res) => {
     // Validate request
-    if(!req.files){
-        res.status(400).send({
-            message: "File not included!"
-        })
-        return;
-    }
 
     if (!req.body) {
         res.status(400).send({
@@ -16,13 +10,9 @@ exports.create = (req, res) => {
         });
     }
 
-
-    const file = req.files[0].buffer;
-
-    // Create a Pdf
     const pdf = new Pdf({
-        pdf: file,
-        module_id: req.body.fileKey
+        pdf: req.body.pdf,
+        module_id: req.body.module_id
     });
 
     // Save pdf in the database
@@ -71,12 +61,6 @@ exports.findAll = (req, res) => {
 // Update a Pdf identified by the pdfId in the request
 exports.update = (req, res) => {
     // Validate request
-    if(!req.files){
-        res.status(400).send({
-            message: "File not included!"
-        })
-        return;
-    }
 
     if(!req.body) {
         req.status(400).send({
@@ -84,12 +68,8 @@ exports.update = (req, res) => {
         });
     }
 
-    const file = req.files[0].buffer;
-
-    // Create a Pdf
     const pdf = new Pdf({
-        pdf: file,
-        module_id: req.body.fileKey
+        pdf: req.body.pdf
     });
 
     const className = "Pdf";
