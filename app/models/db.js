@@ -20,7 +20,7 @@ connectionPool.on('connection', (connection) => {
     });
     connection.on('end', (err) =>{
         console.log("DB connection closed");
-        console.error(new Date(), 'MySQL close', err);
+        console.error(new Date(), 'MySQL close', err.code);
     });
 });
 
