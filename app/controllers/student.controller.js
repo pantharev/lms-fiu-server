@@ -63,8 +63,23 @@ exports.findAllInstructors = (req, res) => {
 
 // Find a single Student with a studentId
 exports.findOne = (req, res) => {
-    Student.findByEmail(req.params.studentEmail, (err, data) => {
+    Student.findById(req.params.id, (err, data) => {
+    }).then((data) => {
+        console.log("Promise resolved! found student by ID: ");
+        console.log(data);
+        res.send(data);
+        res.end();
+    }).catch((reason) => {
+        console.log("Promise Rejected for find student by ID: ");
+        console.log(reason.sqlMessage);
+        res.status(500).send({ message: reason.sqlMessage });
+        res.end();
+    })
+};
 
+// Find a single Student with an email
+exports.findOne2 = (req, res) => {
+    Student.findByEmail(req.params.email, (err, data) => {
     }).then((data) => {
         console.log("Promise resolved! found student by email: ");
         console.log(data);

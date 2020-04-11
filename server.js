@@ -37,6 +37,7 @@ const port = process.env.PORT || 3000;
 
 const allowUrl = ['courses', 'modules'];
 
+
 const AWS = require('aws-sdk');
 
 AWS.config.getCredentials(function(err) {
@@ -47,6 +48,31 @@ AWS.config.getCredentials(function(err) {
         console.log("Secret access key:", AWS.config.credentials.secretAccessKey);
     }
 });
+
+const nodemailer = require("nodemailer");
+
+const sendMail = (studentCourse, callback) => {
+    console.log("in sendMail function: ", studentCourse);
+    const transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false, // true for 465, false for other ports
+        auth: {
+            user: 'lmsfiustudent@gmail.com', 
+            pass: 'lms@student@fiu' 
+        }
+    });
+
+    const mailOptions = {
+        from: `"FIU LMS", "no-reply-fiu-lms@fiu.edu"`,
+        to: studentCourse.student.email,
+        subject: "LMS TEST - Enrollment",
+        html: "Hi " + studentCourse.student.f_name + " " + studentCourse.student.l_name + ",<br /><br />" + 
+        "You have been accepted into the course " + studentCourse.course.name + "!"
+    };
+    transporter.sendMail(mailOptions, callback);
+}
+
 
 app.use(bodyParser.json());
 
@@ -191,6 +217,21 @@ app.delete("/filesystem/:fileName", (req, res) => {
     });
 })
 
+app.post("/sendmail", (req, res) => {
+    console.log("server.js request came");
+    sendMail(req.body, (err, info) => {
+        if (err) {
+            console.log(err);
+            res.status(500);
+            res.send({ error: "Failed to send email" });
+        } else {
+            console.log("Email has been sent");
+            res.send(info);
+        }
+    });
+});
+
+
 const sql = require("./app/models/db");
 
 io.on('connection', function (socket) {
@@ -229,18 +270,6 @@ app.use(function (err, req, res, next) {
         res.json({ "message": err.name + ": " + err.message });
     }
 });
-
-/* Facebook tab request handling */
-
-
-app.post('/', function (req, res) {
-    res.send("Post request sent to backend");
-});
-
-app.post('/userdata', function (req, res) {
-    res.send(req.body);
-});
-
 
 http.listen(port, () => {
     console.log("http Server is running on port: " + port);
