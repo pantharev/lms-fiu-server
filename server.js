@@ -1,4 +1,4 @@
-require('dotenv').config();
+//require('dotenv').config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const _ = require('lodash');
@@ -37,18 +37,6 @@ const port = process.env.PORT || 3000;
 
 const allowUrl = ['courses', 'modules'];
 
-
-const AWS = require('aws-sdk');
-
-AWS.config.getCredentials(function(err) {
-    if(err) console.log(err.stack);
-    //credentials not loaded
-    else {
-        console.log("Access key:", AWS.config.credentials.accessKeyId);
-        console.log("Secret access key:", AWS.config.credentials.secretAccessKey);
-    }
-});
-
 const nodemailer = require("nodemailer");
 
 const sendMail = (studentCourse, callback) => {
@@ -77,12 +65,6 @@ const sendMail = (studentCourse, callback) => {
 app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({ extended: true }));
-/*const corsOptions = {
-    origin: '*',
-    methods: ["POST", "GET"],
-    credentials: true,
-    maxAge: 3600
-};*/
 app.use(cors());
 
 // Auth 
@@ -93,7 +75,6 @@ app.use(cookieSession({
 }));
 
 app.use(cookieParser());
-//app.use(fileupload());
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -102,120 +83,12 @@ const passportSetup = require('./app/config/passport-setup');
 const authRoutes = require('./app/routes/auth-routes');
 const profileRoutes = require('./app/routes/profile-routes');
 
-/*const authenticationMiddleware = (req, res, next) => {
-
-    if (passport.authenticate('facebook')) {
-        console.log("Authorized access");
-        return next()
-    }
-    res.redirect('/');
-}*/
-
-//app.use(authenticationMiddleware);
 app.use('/auth', authRoutes);
 app.use('/profile', profileRoutes);
 
 app.get("/", (req, res) => {
     res.send('Hello World4');
 });
-
-const bucketName = "pdflmsfiu2";
-
-app.get("/filesystem", (req, res) => {
-    const getPdfs = new AWS.S3().listObjects({Bucket: bucketName, Prefix: 'pdfs/'}).promise();
-
-    getPdfs.then((datas) => {
-        //console.log(datas);
-        let pdfsArr = new Map();
-        datas.Contents.forEach((data, i, arr) => {
-            //console.log(datas.Contents.length - 1);
-            if(data.Key != datas.Prefix){
-                const getPdf = new AWS.S3().getObject({Bucket: datas.Name, Key: data.Key}).promise();
-    
-                getPdf.then((pdf) => {
-                    //console.log(pdf.Body);
-                    pdfsArr.set(pdf.ETag, pdf.Body);
-                    console.log("length: " + pdfsArr.size + " contents length: " + (datas.Contents.length - 1) + " i: " + i);
-                    if(pdfsArr.size >= datas.Contents.length - 1){
-                        console.log("too much data, or last data");
-                        console.log(pdfsArr);
-                        //console.log(Array.from(pdfsArr));
-                        res.send(Array.from(pdfsArr));
-                    }
-                    if(i == datas.Contents.length - 1){
-                        console.log("end in promise");
-                        pdfsArr.set(pdf.ETag, pdf.Body);
-                        console.log("length last: " + pdfsArr.size);
-                        //res.send(Array.from(pdfsArr));
-                    }
-                })
-            }
-            if(i == datas.Contents.length - 1){
-                console.log("end");
-            }
-        })
-    })
-})
-
-app.post("/filesystem", upload.any(), (req, res) => {
-    // Validate request
-    if(!req.files){
-        res.status(400).send({
-            message: "File not included!"
-        })
-        return;
-    }
-
-    const file = req.files[0];
-    console.log(file);
-
-    const keyName = file.fieldname;
-    const folderName = "pdfs/";
-
-    const uploadPromise = new AWS.S3({apiVersion: '2006-03-01'}).putObject({Bucket: bucketName, Key: folderName + keyName, Body: file.buffer}, (err, data) => {
-        if(err) {
-            console.log("error uploading");
-        }
-        console.log(data);
-    }).promise();
-
-    uploadPromise.then((data) => {
-            console.log("Successfully uploaded data to " + bucketName + "/" + keyName);
-            res.json({uploadMsg: "Successfully uploaded data to " + bucketName + "/" + keyName});
-        }
-    );
-
-
-})
-
-app.delete("/filesystem/:fileName", (req, res) => {
-    let fileName = req.params.fileName;
-    const folderName = "pdfs/";
-
-    console.log(folderName + fileName);
-    const deletePromise = new AWS.S3().deleteObject({Bucket: bucketName, Key: folderName + fileName}, (err, data) => {
-        if(err) {
-            console.log("error: " + err);
-        }
-        if(_.isEmpty(data)){
-            console.log("nothing to delete!" + JSON.stringify(data));
-        }
-    }).promise();
-
-    deletePromise.then((data) => {
-        if(_.isEmpty(data)){
-            console.log("nothing to delete!");
-            res.json({error: "nothing to delete!"});
-            res.end();
-        } else{
-            console.log("Deleted file: " + bucketName + "/" + fileName);
-            res.json({deletedMsg: "Deleted file: " + bucketName + "/" + fileName});
-            res.end();
-        }
-    }).catch((err) => {
-        console.log("error: " + err);
-    });
-})
 
 app.post("/sendmail", (req, res) => {
     console.log("server.js request came");

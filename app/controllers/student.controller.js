@@ -63,6 +63,7 @@ exports.findAllInstructors = (req, res) => {
 
 // Find a single Student with a studentId
 exports.findOne = (req, res) => {
+    console.log(req.params.id);
     Student.findById(req.params.id, (err, data) => {
     }).then((data) => {
         console.log("Promise resolved! found student by ID: ");
