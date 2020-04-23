@@ -11,7 +11,6 @@
   "author": "Nicolas Arevalo, James Watson III, Alejandro Arrieta",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.656.0",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.4",
     "cookie-session": "^1.4.0",
